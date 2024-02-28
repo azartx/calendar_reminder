@@ -1,4 +1,4 @@
-package com.solo4.calendarreminder.ui.theme
+package com.solo4.calendarreminder.presentation.theme
 
 import android.app.Activity
 import android.os.Build

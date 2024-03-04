@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -45,5 +47,15 @@ fun AddEventScreen() {
 
         TextField(value = screenState.title, onValueChange = viewModel::onTitleTextFieldChanged)
         TextField(value = screenState.description, onValueChange = viewModel::onDescriptionTextFieldChanged)
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
+            onClick = viewModel::onSubmitButtonClicked
+        ) {
+            Text(text = "Submit")
+        }
     }
 }

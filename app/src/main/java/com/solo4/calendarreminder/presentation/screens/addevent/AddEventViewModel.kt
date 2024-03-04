@@ -52,6 +52,10 @@ class AddEventViewModel : ViewModel() {
         )
     }
 
+    fun onSubmitButtonClicked() {
+        // todo save event logic
+    }
+
     private fun getFormatTimeWithTZ(currentTime: Date): String {
         val timeZoneDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
         return timeZoneDate.format(currentTime);

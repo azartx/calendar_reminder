@@ -25,10 +25,9 @@ fun CalendarScreen(navController: NavHostController) {
     Column {
         AppCalendar(
             modifier = Modifier.fillMaxWidth(),
-            model = screenState
-        ) { clickedDay ->
-
-        }
+            model = screenState,
+            onItemClick = viewModel::onDayClicked
+        )
 
         Button(
             modifier = Modifier.fillMaxWidth(),

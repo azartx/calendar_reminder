@@ -19,6 +19,9 @@ interface EventsDao {
     @Query("SELECT * FROM days_table WHERE id = :id")
     fun getDayEventsById(id: Long): List<DayEventRelation>
 
+    @Query("SELECT * FROM days_table")
+    fun getAll(): List<DayEntity>
+
     @Query("SELECT EXISTS(SELECT * FROM days_table WHERE id = :dayId)")
     suspend fun isDayExists(dayId: Long): Boolean
 
@@ -33,10 +36,19 @@ interface EventsDao {
 
     @Transaction
     suspend fun setDayEvent(dayEvent: DayEventRelation) {
-        if (!isDayExists(dayEvent.day.dayMillis)) {
+        if (!isDayExists(dayEvent.day.yearMonthDaySum)) {
             setDay(dayEvent.day)
         }
 
         setEvents(dayEvent.events)
+    }
+
+    @Transaction
+    suspend fun setDayEvent(eventEntity: EventEntity) {
+        if (!isDayExists(eventEntity.dayId)) {
+            setDay(DayEntity(eventEntity.dayId))
+        }
+
+        setEvent(eventEntity)
     }
 }

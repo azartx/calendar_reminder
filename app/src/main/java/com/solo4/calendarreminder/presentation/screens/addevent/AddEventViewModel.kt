@@ -10,6 +10,7 @@ import com.solo4.calendarreminder.data.model.CalendarEvent
 import com.solo4.calendarreminder.data.repository.addevent.AddEventRepository
 import com.solo4.calendarreminder.presentation.navigation.Route
 import com.solo4.calendarreminder.presentation.screens.addevent.state.AddEventScreenState
+import com.solo4.calendarreminder.presentation.screens.calendar.utils.formattedDateId
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -79,7 +80,10 @@ class AddEventViewModel(
 
             val data = _screenState.value
             val event = CalendarEvent(
-                dayMillis = TimeUnit.MILLISECONDS.toDays(datePickerState.value.selectedDateMillis!!),
+                dayMillis = Calendar.getInstance().run {
+                    time = Date(datePickerState.value.selectedDateMillis!!)
+                    formattedDateId
+                },
                 title = data.title,
                 description = data.description,
                 eventTimeMillis = datePickerState.value.selectedDateMillis!!

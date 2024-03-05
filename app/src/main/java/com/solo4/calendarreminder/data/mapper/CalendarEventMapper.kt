@@ -12,7 +12,7 @@ class CalendarEventMapper {
             .map { event ->
                 CalendarEvent(
                     eventId = event.id,
-                    dayMillis = dayEventRelation.day.dayMillis,
+                    dayMillis = dayEventRelation.day.yearMonthDaySum,
                     title = event.title,
                     description = event.description,
                     eventTimeMillis = event.eventTimeMillis

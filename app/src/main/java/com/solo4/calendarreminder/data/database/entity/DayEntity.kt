@@ -9,5 +9,5 @@ data class DayEntity(
 
     @PrimaryKey
     @ColumnInfo(name = "id")
-    val dayMillis: Long
+    val yearMonthDaySum: Long // не миллисы, формат 20240301
 )

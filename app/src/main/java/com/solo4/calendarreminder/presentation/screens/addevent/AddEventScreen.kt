@@ -13,6 +13,8 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -35,6 +37,7 @@ fun AddEventScreen(navController: NavHostController) {
     val viewModel = viewModel<AddEventViewModel>()
     val screenState by viewModel.screenState.collectAsState()
     val datePickerState by viewModel.datePickerState.collectAsState()
+    val timePickerState by viewModel.timePickerState.collectAsState()
 
     LifecycleResumeEffect(key1 = "") {
         val job = lifecycleScope.launch {
@@ -51,6 +54,15 @@ fun AddEventScreen(navController: NavHostController) {
                 confirmButton = {},
             ) {
                 DatePicker(state = datePickerState)
+            }
+        }
+
+        if (screenState.isTimePickerVisible) {
+            DatePickerDialog(
+                onDismissRequest = viewModel::onTimePickerDismissed,
+                confirmButton = {},
+            ) {
+                TimePicker(state = timePickerState)
             }
         }
 

@@ -4,5 +4,6 @@ data class AddEventScreenState(
     val title: String = "",
     val description: String = "",
     val isDatePickerVisible: Boolean = false,
+    val isTimePickerVisible: Boolean = false,
     val selectedDate: String = "Date is not selected"
 )

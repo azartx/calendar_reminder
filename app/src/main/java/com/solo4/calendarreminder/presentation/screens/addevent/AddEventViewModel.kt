@@ -2,8 +2,10 @@ package com.solo4.calendarreminder.presentation.screens.addevent
 
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TimePickerState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.solo4.calendarreminder.App
 import com.solo4.calendarreminder.data.database.CalendarEventsDatabase
 import com.solo4.calendarreminder.data.mapper.CalendarEventMapper
 import com.solo4.calendarreminder.data.model.CalendarEvent
@@ -11,6 +13,7 @@ import com.solo4.calendarreminder.data.repository.addevent.AddEventRepository
 import com.solo4.calendarreminder.presentation.navigation.Route
 import com.solo4.calendarreminder.presentation.screens.addevent.state.AddEventScreenState
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.formattedDateId
+import com.solo4.calendarreminder.utils.millis
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -34,6 +37,9 @@ class AddEventViewModel(
 
     private val _datePickerState = MutableStateFlow(DatePickerState(Locale.getDefault()))
     val datePickerState = _datePickerState.asStateFlow()
+
+    private val _timePickerState = MutableStateFlow(TimePickerState(0, 0, true))
+    val timePickerState = _timePickerState.asStateFlow()
 
     private val _screenState = MutableStateFlow(AddEventScreenState())
     val screenState = _screenState.asStateFlow()
@@ -69,7 +75,23 @@ class AddEventViewModel(
         _screenState.tryEmit(
             _screenState.value.copy(
                 isDatePickerVisible = false,
-                selectedDate = getFormatTimeWithTZ(Date(datePickerState.value.selectedDateMillis ?: 0))
+                isTimePickerVisible = true,
+               // selectedDate = getFormatTimeWithTZ(Date(datePickerState.value.selectedDateMillis ?: 0))
+            )
+        )
+    }
+
+    fun onTimePickerDismissed() {
+        _screenState.tryEmit(
+            _screenState.value.copy(
+                isDatePickerVisible = false,
+                isTimePickerVisible = false,
+                selectedDate = getFormatTimeWithTZ(
+                    Date(
+                        (datePickerState.value.selectedDateMillis ?: 0)
+                                + timePickerState.value.millis
+                    )
+                )
             )
         )
     }
@@ -89,6 +111,8 @@ class AddEventViewModel(
                 eventTimeMillis = datePickerState.value.selectedDateMillis!!
             )
             addEventRepository.saveEvent(event)
+
+            App.eventsNotificationManager.scheduleCalendarEvent(event)
 
             _navigationState.emit(Route.Back)
         }

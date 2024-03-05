@@ -14,7 +14,7 @@ fun AppNavigation(navController: NavHostController) {
             CalendarScreen(navController)
         }
         composable(Route.AddEventScreenRoute::class.java.name) {
-            AddEventScreen()
+            AddEventScreen(navController)
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.solo4.calendarreminder.data.model
+package com.solo4.calendarreminder.data.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

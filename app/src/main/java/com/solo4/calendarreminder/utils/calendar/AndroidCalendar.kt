@@ -14,6 +14,7 @@ class AndroidCalendar : CalendarWrapper {
     private val calendar: GregorianCalendar = GregorianCalendar(timeZone, locale)
 
     override val timeZoneOffset: Int = timeZone.rawOffset
+
     override fun yearOf(dateMillis: Long): Int {
         return synchronized(this) {
             setTimeMillis(dateMillis)

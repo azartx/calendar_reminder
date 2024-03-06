@@ -1,21 +1,14 @@
 package com.solo4.calendarreminder.presentation.screens.calendar.utils
 
+import java.text.SimpleDateFormat
 import java.time.YearMonth
-import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 val currentYear: Int
     get() = YearMonth.now().year
 val currentMonth: Int
     get() = YearMonth.now().monthValue
-
-val Calendar.formattedDateId: Long
-    get() {
-        return get(Calendar.YEAR)
-            .toString()
-            .plus(toTwoDigitNumber(get(Calendar.MONTH) + 1))
-            .plus(toTwoDigitNumber(get(Calendar.DAY_OF_MONTH)))
-            .toLong()
-    }
 
 fun getFormattedDateId(
     day: Int,
@@ -32,4 +25,9 @@ private fun toTwoDigitNumber(number: Int): String {
     return number.toString()
         .takeIf { it.length == 2 }
         ?: "0$number"
+}
+
+fun Date.formatWithPattern(pattern: String = "dd.MM.yyyy 'in' HH:mm"): String {
+    return SimpleDateFormat(pattern, Locale.getDefault())
+        .format(this)
 }

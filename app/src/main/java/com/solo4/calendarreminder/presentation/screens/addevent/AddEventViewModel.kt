@@ -1,6 +1,5 @@
 package com.solo4.calendarreminder.presentation.screens.addevent
 
-import android.util.Log
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePickerState
@@ -13,6 +12,7 @@ import com.solo4.calendarreminder.data.model.CalendarEvent
 import com.solo4.calendarreminder.data.repository.addevent.AddEventRepository
 import com.solo4.calendarreminder.presentation.navigation.Route
 import com.solo4.calendarreminder.presentation.screens.addevent.state.AddEventScreenState
+import com.solo4.calendarreminder.presentation.screens.calendar.utils.formatWithPattern
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.getFormattedDateId
 import com.solo4.calendarreminder.utils.calendar.CalendarWrapper
 import com.solo4.calendarreminder.utils.millis
@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
@@ -74,8 +73,7 @@ class AddEventViewModel(
         _screenState.tryEmit(
             _screenState.value.copy(
                 isDatePickerVisible = false,
-                isTimePickerVisible = true,
-               // selectedDate = getFormatTimeWithTZ(Date(datePickerState.value.selectedDateMillis ?: 0))
+                isTimePickerVisible = true
             )
         )
     }
@@ -85,12 +83,10 @@ class AddEventViewModel(
             _screenState.value.copy(
                 isDatePickerVisible = false,
                 isTimePickerVisible = false,
-                selectedDate = getFormatTimeWithTZ(
-                    Date(
-                        (datePickerState.value.selectedDateMillis ?: 0)
-                                + timePickerState.value.millis
-                    )
-                )
+                selectedDate = Date(
+                    (datePickerState.value.selectedDateMillis ?: 0)
+                        + timePickerState.value.millis
+                ).formatWithPattern()
             )
         )
     }
@@ -118,10 +114,5 @@ class AddEventViewModel(
 
             _navigationState.emit(Route.Back)
         }
-    }
-
-    private fun getFormatTimeWithTZ(currentTime: Date): String {
-        val timeZoneDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-        return timeZoneDate.format(currentTime);
     }
 }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
@@ -66,19 +68,32 @@ fun AddEventScreen(navController: NavHostController) {
             }
         }
 
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Text(text = screenState.selectedDate)
+        Row(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
+            Text(modifier = Modifier.weight(1f).align(Alignment.CenterVertically), text = screenState.selectedDate)
             Spacer(modifier = Modifier.width(20.dp))
             Button(onClick = viewModel::onDatePickerButtonPressed) { Text(text = "Select date") }
         }
 
-        TextField(value = screenState.title, onValueChange = viewModel::onTitleTextFieldChanged)
-        TextField(value = screenState.description, onValueChange = viewModel::onDescriptionTextFieldChanged)
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = screenState.title,
+            placeholder = { Text(text = "Title") },
+            onValueChange = viewModel::onTitleTextFieldChanged
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        TextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            value = screenState.description,
+            placeholder = { Text(text = "Description") },
+            onValueChange = viewModel::onDescriptionTextFieldChanged
+        )
+
         Button(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.padding(10.dp).fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
             onClick = viewModel::onSubmitButtonClicked
         ) {

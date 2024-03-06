@@ -1,5 +1,6 @@
 package com.solo4.calendarreminder.presentation.screens.addevent
 
+import android.util.Log
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePickerState
@@ -12,7 +13,8 @@ import com.solo4.calendarreminder.data.model.CalendarEvent
 import com.solo4.calendarreminder.data.repository.addevent.AddEventRepository
 import com.solo4.calendarreminder.presentation.navigation.Route
 import com.solo4.calendarreminder.presentation.screens.addevent.state.AddEventScreenState
-import com.solo4.calendarreminder.presentation.screens.calendar.utils.formattedDateId
+import com.solo4.calendarreminder.presentation.screens.calendar.utils.getFormattedDateId
+import com.solo4.calendarreminder.utils.calendar.CalendarWrapper
 import com.solo4.calendarreminder.utils.millis
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,19 +22,16 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.time.LocalTime
-import java.time.temporal.ChronoField
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 class AddEventViewModel(
     private val addEventRepository: AddEventRepository = AddEventRepository(
         eventsDao = CalendarEventsDatabase.instance.eventsDao,
         calendarEventMapper = CalendarEventMapper()
-    )
+    ),
+    private val calendar: CalendarWrapper = App.calendarWrapper
 ) : ViewModel() {
 
     private val _datePickerState = MutableStateFlow(DatePickerState(Locale.getDefault()))
@@ -100,15 +99,18 @@ class AddEventViewModel(
         viewModelScope.launch {
             // todo emit loading state
 
+            val eventDate = datePickerState.value.selectedDateMillis!! // TODO
+
             val data = _screenState.value
             val event = CalendarEvent(
-                dayMillis = Calendar.getInstance().run {
-                    time = Date(datePickerState.value.selectedDateMillis!!)
-                    formattedDateId
-                },
+                dayMillis = getFormattedDateId(
+                    day = calendar.dayOfMonthOf(eventDate),
+                    month = calendar.monthOf(eventDate),
+                    year = calendar.yearOf(eventDate)
+                ),
                 title = data.title,
                 description = data.description,
-                eventTimeMillis = datePickerState.value.selectedDateMillis!!
+                eventTimeMillis = (eventDate + timePickerState.value.millis) - calendar.timeZoneOffset
             )
             addEventRepository.saveEvent(event)
 

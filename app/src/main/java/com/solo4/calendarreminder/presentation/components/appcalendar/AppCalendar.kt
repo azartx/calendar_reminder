@@ -2,6 +2,7 @@ package com.solo4.calendarreminder.presentation.components.appcalendar
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -19,13 +20,15 @@ fun AppCalendar(
     Column(modifier = modifier) {
         model.rows.forEach { rowData ->
             Row(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 12.dp)
             ) {
                 rowData.rowItems.forEach { rowItem ->
                     AppCalendarBlock(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .defaultMinSize(minHeight = 48.dp)
+                            .weight(1f),
                         model = rowItem,
                         onItemClicked = onItemClick
                     )

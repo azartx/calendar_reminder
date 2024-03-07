@@ -2,6 +2,7 @@ package com.solo4.calendarreminder.presentation.screens.calendar
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -22,15 +23,20 @@ fun CalendarScreen(navController: NavHostController) {
 
     val screenState by viewModel.calendarModel.collectAsState()
 
-    Column {
+    Column(
+        modifier = Modifier.padding(horizontal = 10.dp)
+    ) {
         AppCalendar(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .padding(vertical = 20.dp)
+                .fillMaxWidth(),
             model = screenState,
             onItemClick = viewModel::onDayClicked
         )
 
         Button(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
             onClick = { navController.navigate(Route.AddEventScreenRoute::class.java.name) }
         ) {

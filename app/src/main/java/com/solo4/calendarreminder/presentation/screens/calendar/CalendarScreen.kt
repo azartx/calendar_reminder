@@ -15,6 +15,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.solo4.calendarreminder.presentation.components.appcalendar.AppCalendar
 import com.solo4.calendarreminder.presentation.navigation.Route
+import com.solo4.calendarreminder.presentation.navigation.Route.ArgKeys.DAY_ID
+import com.solo4.calendarreminder.presentation.navigation.name
+import com.solo4.calendarreminder.presentation.navigation.navigateWithArg
+import com.solo4.calendarreminder.presentation.navigation.navigateWithArgs
 
 @Composable
 fun CalendarScreen(navController: NavHostController) {
@@ -31,14 +35,16 @@ fun CalendarScreen(navController: NavHostController) {
                 .padding(vertical = 20.dp)
                 .fillMaxWidth(),
             model = screenState,
-            onItemClick = viewModel::onDayClicked
+            onItemClick = {
+                navController.navigateWithArg(Route.DayDetailsScreenRoute, DAY_ID, it.dayId)
+            }
         )
 
         Button(
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
-            onClick = { navController.navigate(Route.AddEventScreenRoute::class.java.name) }
+            onClick = { navController.navigate(Route.AddEventScreenRoute.name) }
         ) {
             Text(text = "Add new event")
         }

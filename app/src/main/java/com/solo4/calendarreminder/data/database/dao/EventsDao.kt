@@ -25,6 +25,9 @@ interface EventsDao {
     @Query("SELECT EXISTS(SELECT * FROM days_table WHERE id = :dayId)")
     suspend fun isDayExists(dayId: Long): Boolean
 
+    @Query("SELECT EXISTS(SELECT * FROM events_table WHERE day_id = :dayId)")
+    suspend fun hasEvents(dayId: Long): Boolean
+
     @Insert(entity = DayEntity::class, onConflict = OnConflictStrategy.ABORT)
     suspend fun setDay(dayEntity: DayEntity)
 

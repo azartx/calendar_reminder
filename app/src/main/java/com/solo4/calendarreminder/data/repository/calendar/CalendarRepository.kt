@@ -18,4 +18,10 @@ class CalendarRepository(
             )
         }
     }
+
+    suspend fun hasDayEvents(dayId: Long): Boolean {
+        return withContext(Dispatchers.IO) {
+            eventsDao.hasEvents(dayId)
+        }
+    }
 }

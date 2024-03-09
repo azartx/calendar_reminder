@@ -1,14 +1,12 @@
 package com.solo4.calendarreminder.presentation.screens.calendar
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.solo4.calendarreminder.data.database.CalendarEventsDatabase
 import com.solo4.calendarreminder.data.mapper.CalendarEventMapper
-import com.solo4.calendarreminder.data.model.CalendarEvent
 import com.solo4.calendarreminder.data.repository.calendar.CalendarRepository
-import com.solo4.calendarreminder.presentation.components.appcalendar.model.AppCalendarItemModel
 import com.solo4.calendarreminder.presentation.screens.calendar.factory.CalendarModelFactory
+import com.solo4.calendarreminder.presentation.screens.calendar.mapper.CalendarItemMapper
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.currentMonth
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.currentYear
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,30 +17,23 @@ class CalendarViewModel(
     private val calendarRepository: CalendarRepository = CalendarRepository(
         eventsDao = CalendarEventsDatabase.instance.eventsDao,
         calendarEventMapper = CalendarEventMapper()
-    )
+    ),
+    private val calendarItemMapper: CalendarItemMapper = CalendarItemMapper()
 ) : ViewModel() {
 
     private val calendarFactory: CalendarModelFactory = CalendarModelFactory()
 
-    private val _calendarModel = MutableStateFlow(calendarFactory.createMonthModels(currentYear, currentMonth))
+    private val _calendarModel = MutableStateFlow(
+        calendarFactory.createMonthModels(currentYear, currentMonth)
+    )
     val calendarModel = _calendarModel.asStateFlow()
-
-    private lateinit var monthEvents: List<CalendarEvent>
 
     init {
         viewModelScope.launch {
-            monthEvents = _calendarModel.value
-                .rows
-                .flatMap { row ->
-                    row.rowItems
-                        .flatMap { calendarRepository.getMonthEvents(it.dayId) }
-                }
-        }
-    }
-    fun onDayClicked(appCalendarItemModel: AppCalendarItemModel) {
-        if (::monthEvents.isInitialized) {
-            val eventsStr = monthEvents.filter { it.dayMillis == appCalendarItemModel.dayId }.joinToString("\n")
-            Log.e("Events_${appCalendarItemModel.dayId}", eventsStr)
+            val updatedItems = calendarItemMapper.updateEventVisibility(_calendarModel.value) {
+                calendarRepository.hasDayEvents(it)
+            }
+            _calendarModel.emit(updatedItems)
         }
     }
 }

@@ -28,12 +28,14 @@ class CalendarViewModel(
     )
     val calendarModel = _calendarModel.asStateFlow()
 
-    init {
-        viewModelScope.launch {
-            val updatedItems = calendarItemMapper.updateEventVisibility(_calendarModel.value) {
-                calendarRepository.hasDayEvents(it)
-            }
-            _calendarModel.emit(updatedItems)
+    suspend fun onScreenResumed() {
+        updateDaysEventsState()
+    }
+
+    private suspend fun updateDaysEventsState() {
+        val updatedItems = calendarItemMapper.updateEventVisibility(_calendarModel.value) {
+            calendarRepository.hasDayEvents(it)
         }
+        _calendarModel.emit(updatedItems)
     }
 }

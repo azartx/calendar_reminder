@@ -11,6 +11,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.solo4.calendarreminder.presentation.components.appcalendar.AppCalendar
@@ -19,6 +21,8 @@ import com.solo4.calendarreminder.presentation.navigation.Route.ArgKeys.DAY_ID
 import com.solo4.calendarreminder.presentation.navigation.name
 import com.solo4.calendarreminder.presentation.navigation.navigateWithArg
 import com.solo4.calendarreminder.presentation.navigation.navigateWithArgs
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @Composable
 fun CalendarScreen(navController: NavHostController) {
@@ -26,6 +30,11 @@ fun CalendarScreen(navController: NavHostController) {
     val viewModel: CalendarViewModel = viewModel()
 
     val screenState by viewModel.calendarModel.collectAsState()
+
+    LifecycleResumeEffect(key1 = "") {
+        val scope = lifecycleScope.launch { viewModel.onScreenResumed() }
+        onPauseOrDispose { scope.cancel() }
+    }
 
     Column(
         modifier = Modifier.padding(horizontal = 10.dp)

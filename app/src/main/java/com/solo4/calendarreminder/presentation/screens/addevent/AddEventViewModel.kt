@@ -1,5 +1,6 @@
 package com.solo4.calendarreminder.presentation.screens.addevent
 
+import android.util.Log
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePickerState
@@ -10,6 +11,9 @@ import com.solo4.calendarreminder.data.database.CalendarEventsDatabase
 import com.solo4.calendarreminder.data.mapper.CalendarEventMapper
 import com.solo4.calendarreminder.data.model.CalendarEvent
 import com.solo4.calendarreminder.data.repository.addevent.AddEventRepository
+import com.solo4.calendarreminder.presentation.navigation.AddEventScreenArgs
+import com.solo4.calendarreminder.presentation.navigation.ArgumentHolder
+import com.solo4.calendarreminder.presentation.navigation.DayDetailsScreenArgs
 import com.solo4.calendarreminder.presentation.navigation.Route
 import com.solo4.calendarreminder.presentation.screens.addevent.state.AddEventScreenState
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.formatWithPattern
@@ -32,6 +36,12 @@ class AddEventViewModel(
     ),
     private val calendar: CalendarWrapper = App.calendarWrapper
 ) : ViewModel() {
+
+    val concreteDay: Long? = ArgumentHolder.getArgOrNull< // TODO
+            Route.AddEventScreenRoute,
+            AddEventScreenArgs
+            >(Route.AddEventScreenRoute)
+        ?.concreteDayId
 
     private val _datePickerState = MutableStateFlow(DatePickerState(Locale.getDefault()))
     val datePickerState = _datePickerState.asStateFlow()

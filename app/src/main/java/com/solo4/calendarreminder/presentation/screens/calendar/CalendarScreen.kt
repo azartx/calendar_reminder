@@ -16,12 +16,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.solo4.calendarreminder.presentation.components.appcalendar.AppCalendar
+import com.solo4.calendarreminder.presentation.navigation.DayDetailsScreenArgs
 import com.solo4.calendarreminder.presentation.navigation.Route
-import com.solo4.calendarreminder.presentation.navigation.Route.ArgKeys.DAY_ID
-import com.solo4.calendarreminder.presentation.navigation.name
-import com.solo4.calendarreminder.presentation.navigation.navigateWithArg
 import com.solo4.calendarreminder.presentation.navigation.navigateWithArgs
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Composable
@@ -45,7 +42,10 @@ fun CalendarScreen(navController: NavHostController) {
                 .fillMaxWidth(),
             model = screenState,
             onItemClick = {
-                navController.navigateWithArg(Route.DayDetailsScreenRoute, DAY_ID, it.dayId)
+                navController.navigateWithArgs(
+                    Route.DayDetailsScreenRoute,
+                    DayDetailsScreenArgs(it.dayId)
+                )
             }
         )
 
@@ -53,7 +53,9 @@ fun CalendarScreen(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
-            onClick = { navController.navigate(Route.AddEventScreenRoute.name) }
+            onClick = {
+                navController.navigateWithArgs(Route.AddEventScreenRoute)
+            }
         ) {
             Text(text = "Add new event")
         }

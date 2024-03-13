@@ -36,9 +36,9 @@ fun Date.formatWithPattern(pattern: String = "dd.MM.yyyy 'in' HH:mm"): String {
 fun CalendarWrapper.formatDateIdToDayMillis(dayId: Long): Long {
     val dayIdString = dayId.toString()
 
-    val year = dayIdString.substring(0, 3).toInt()
-    val month = dayIdString.substring(4, 5).toInt()
-    val day = dayIdString.substring(6, 7).toInt()
+    val year = dayIdString.substring(0, 4).toInt()
+    val month = dayIdString.substring(4, 6).toInt()
+    val day = dayIdString.substring(6, 8).toInt()
 
     return millisOf(year, month, day)
 }

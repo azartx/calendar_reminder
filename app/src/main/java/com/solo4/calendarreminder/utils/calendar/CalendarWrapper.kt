@@ -15,4 +15,9 @@ interface CalendarWrapper {
      * From 1 to Last month day
      * */
     fun dayOfMonthOf(dateMillis: Long): Int
+
+    /**
+    * Get milliseconds of inputted date
+    * */
+    fun millisOf(year: Int, month: Int, day: Int): Long
 }

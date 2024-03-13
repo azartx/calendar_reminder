@@ -16,6 +16,7 @@ import com.solo4.calendarreminder.presentation.navigation.ArgumentHolder
 import com.solo4.calendarreminder.presentation.navigation.DayDetailsScreenArgs
 import com.solo4.calendarreminder.presentation.navigation.Route
 import com.solo4.calendarreminder.presentation.screens.addevent.state.AddEventScreenState
+import com.solo4.calendarreminder.presentation.screens.calendar.utils.formatDateIdToDayMillis
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.formatWithPattern
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.getFormattedDateId
 import com.solo4.calendarreminder.utils.calendar.CalendarWrapper
@@ -37,13 +38,19 @@ class AddEventViewModel(
     private val calendar: CalendarWrapper = App.calendarWrapper
 ) : ViewModel() {
 
-    val concreteDay: Long? = ArgumentHolder.getArgOrNull< // TODO
+    val concreteDay: Long? = ArgumentHolder.getArgOrNull<
             Route.AddEventScreenRoute,
             AddEventScreenArgs
             >(Route.AddEventScreenRoute)
         ?.concreteDayId
 
-    private val _datePickerState = MutableStateFlow(DatePickerState(Locale.getDefault()))
+    private val _datePickerState = MutableStateFlow(
+        DatePickerState(
+            Locale.getDefault(),
+            initialSelectedDateMillis = concreteDay
+                ?.let(calendar::formatDateIdToDayMillis)
+        )
+    )
     val datePickerState = _datePickerState.asStateFlow()
 
     private val _timePickerState = MutableStateFlow(TimePickerState(0, 0, true))
@@ -74,7 +81,10 @@ class AddEventViewModel(
     fun onDatePickerButtonPressed() {
         _screenState.tryEmit(
             _screenState.value.copy(
-                isDatePickerVisible = true
+                // Показываем дэйт пикер если нет предустановленного дня
+                isDatePickerVisible = concreteDay == null,
+                // Показываем тайм пикер, если ден был заранее установлен
+                isTimePickerVisible = concreteDay != null
             )
         )
     }

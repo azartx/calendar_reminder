@@ -124,6 +124,8 @@ class AddEventViewModel(
             val eventDate = getDateFromPicker()
             val eventTimeMillis = eventDate + timePickerState.value.millis
 
+            Log.e("ffff", eventDate.toString())
+
             val data = _screenState.value
             val event = CalendarEvent(
                 dayMillis = getFormattedDateId(

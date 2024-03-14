@@ -41,7 +41,7 @@ class AndroidCalendar : CalendarWrapper {
 
     override fun millisOf(year: Int, month: Int, day: Int): Long {
         return synchronized(this) {
-            calendar.set(year, month, day, 0, 0)
+            calendar.set(year, month - 1, day, 0, 0)
 
             calendar.timeInMillis
         }

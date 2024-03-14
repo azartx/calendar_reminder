@@ -15,6 +15,9 @@ class AndroidCalendar : CalendarWrapper {
 
     override val timeZoneOffset: Int = timeZone.rawOffset
 
+    override val millisNow: Long
+        get() = System.currentTimeMillis()
+
     override fun yearOf(dateMillis: Long): Int {
         return synchronized(this) {
             setTimeMillis(dateMillis)

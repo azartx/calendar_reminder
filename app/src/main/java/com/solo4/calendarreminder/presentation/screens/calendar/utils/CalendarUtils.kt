@@ -2,14 +2,8 @@ package com.solo4.calendarreminder.presentation.screens.calendar.utils
 
 import com.solo4.calendarreminder.utils.calendar.CalendarWrapper
 import java.text.SimpleDateFormat
-import java.time.YearMonth
 import java.util.Date
 import java.util.Locale
-
-val currentYear: Int
-    get() = YearMonth.now().year
-val currentMonth: Int
-    get() = YearMonth.now().monthValue
 
 const val DATE_IN_TIME_PATTERN = "dd.MM.yyyy 'in' HH:mm"
 const val DATE_PATTERN = "dd.MM.yyyy"

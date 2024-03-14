@@ -4,6 +4,8 @@ interface CalendarWrapper {
 
     val timeZoneOffset: Int
 
+    val millisNow: Long
+
     fun yearOf(dateMillis: Long): Int
 
     /**

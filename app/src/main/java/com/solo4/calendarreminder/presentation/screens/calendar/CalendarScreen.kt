@@ -46,6 +46,9 @@ fun CalendarScreen(navController: NavHostController) {
                     Route.DayDetailsScreenRoute,
                     DayDetailsScreenArgs(it.dayId)
                 )
+            },
+            onHorizontalSwipe = { isRightSwipe ->
+                viewModel.onCalendarSwiped(isRightSwipe)
             }
         )
 

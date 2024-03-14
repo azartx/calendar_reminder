@@ -11,6 +11,9 @@ val currentYear: Int
 val currentMonth: Int
     get() = YearMonth.now().monthValue
 
+const val DATE_IN_TIME_PATTERN = "dd.MM.yyyy 'in' HH:mm"
+const val DATE_PATTERN = "dd.MM.yyyy"
+
 fun getFormattedDateId(
     day: Int,
     month: Int,
@@ -28,9 +31,9 @@ private fun toTwoDigitNumber(number: Int): String {
         ?: "0$number"
 }
 
-fun Date.formatWithPattern(pattern: String = "dd.MM.yyyy 'in' HH:mm"): String {
+fun Long.toDateByPattern(pattern: String = DATE_IN_TIME_PATTERN): String {
     return SimpleDateFormat(pattern, Locale.getDefault())
-        .format(this)
+        .format(Date(this))
 }
 
 fun CalendarWrapper.formatDateIdToDayMillis(dayId: Long): Long {
@@ -41,4 +44,12 @@ fun CalendarWrapper.formatDateIdToDayMillis(dayId: Long): Long {
     val day = dayIdString.substring(6, 8).toInt()
 
     return millisOf(year, month, day)
+}
+
+fun CalendarWrapper.addTimezoneOffset(millis: Long): Long {
+    return millis + timeZoneOffset
+}
+
+fun CalendarWrapper.removeTimezoneOffset(millis: Long): Long {
+    return millis - timeZoneOffset
 }

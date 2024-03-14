@@ -13,12 +13,14 @@ import com.solo4.calendarreminder.data.model.CalendarEvent
 import com.solo4.calendarreminder.data.repository.addevent.AddEventRepository
 import com.solo4.calendarreminder.presentation.navigation.AddEventScreenArgs
 import com.solo4.calendarreminder.presentation.navigation.ArgumentHolder
-import com.solo4.calendarreminder.presentation.navigation.DayDetailsScreenArgs
 import com.solo4.calendarreminder.presentation.navigation.Route
 import com.solo4.calendarreminder.presentation.screens.addevent.state.AddEventScreenState
+import com.solo4.calendarreminder.presentation.screens.calendar.utils.DATE_PATTERN
+import com.solo4.calendarreminder.presentation.screens.calendar.utils.addTimezoneOffset
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.formatDateIdToDayMillis
-import com.solo4.calendarreminder.presentation.screens.calendar.utils.formatWithPattern
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.getFormattedDateId
+import com.solo4.calendarreminder.presentation.screens.calendar.utils.removeTimezoneOffset
+import com.solo4.calendarreminder.presentation.screens.calendar.utils.toDateByPattern
 import com.solo4.calendarreminder.utils.calendar.CalendarWrapper
 import com.solo4.calendarreminder.utils.millis
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -26,7 +28,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.Date
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,7 +49,7 @@ class AddEventViewModel(
         DatePickerState(
             Locale.getDefault(),
             initialSelectedDateMillis = concreteDay
-                ?.let(calendar::formatDateIdToDayMillis)
+                ?.let { calendar.addTimezoneOffset(calendar.formatDateIdToDayMillis(it)) }
         )
     )
     val datePickerState = _datePickerState.asStateFlow()
@@ -56,7 +57,13 @@ class AddEventViewModel(
     private val _timePickerState = MutableStateFlow(TimePickerState(0, 0, true))
     val timePickerState = _timePickerState.asStateFlow()
 
-    private val _screenState = MutableStateFlow(AddEventScreenState())
+    private val _screenState = MutableStateFlow(
+        AddEventScreenState().run {
+            if (concreteDay == null) this else copy(
+                selectedDate = getDateFromPicker().toDateByPattern(DATE_PATTERN)
+            )
+        }
+    )
     val screenState = _screenState.asStateFlow()
 
     private val _navigationState = MutableSharedFlow<Route>()
@@ -103,10 +110,7 @@ class AddEventViewModel(
             _screenState.value.copy(
                 isDatePickerVisible = false,
                 isTimePickerVisible = false,
-                selectedDate = Date(
-                    (datePickerState.value.selectedDateMillis ?: 0)
-                        + timePickerState.value.millis
-                ).formatWithPattern()
+                selectedDate = (getDateFromPicker() + timePickerState.value.millis).toDateByPattern()
             )
         )
     }
@@ -115,7 +119,10 @@ class AddEventViewModel(
         viewModelScope.launch {
             // todo emit loading state
 
-            val eventDate = datePickerState.value.selectedDateMillis!! // TODO
+            if (timePickerState.value.millis == 0L) throw Exception("Should be validated")
+
+            val eventDate = getDateFromPicker()
+            val eventTimeMillis = eventDate + timePickerState.value.millis
 
             val data = _screenState.value
             val event = CalendarEvent(
@@ -126,7 +133,7 @@ class AddEventViewModel(
                 ),
                 title = data.title,
                 description = data.description,
-                eventTimeMillis = (eventDate + timePickerState.value.millis) - calendar.timeZoneOffset
+                eventTimeMillis = eventTimeMillis
             )
             addEventRepository.saveEvent(event)
 
@@ -134,5 +141,9 @@ class AddEventViewModel(
 
             _navigationState.emit(Route.Back)
         }
+    }
+
+    private fun getDateFromPicker(): Long {
+        return datePickerState.value.selectedDateMillis?.let(calendar::removeTimezoneOffset)!!
     }
 }

@@ -11,18 +11,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.solo4.calendarreminder.presentation.components.appcalendar.model.AppCalendarItemModel
 import com.solo4.calendarreminder.presentation.components.appcalendar.model.AppCalendarModel
-import com.solo4.calendarreminder.presentation.components.appcalendar.model.AppCalendarRow
 
 @Composable
 fun AppCalendar(
@@ -70,27 +67,4 @@ fun AppCalendar(
             }
         }
     }
-}
-
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-)
-@Composable
-fun AppCalendarPreview() {
-    AppCalendar(
-        model = AppCalendarModel(
-            List(4) {
-                AppCalendarRow(
-                    List(7) {
-                        AppCalendarItemModel(
-                            10, 10, 2024, 2
-                        )
-                    }
-                )
-            }
-        ),
-        onItemClick = {},
-        onHorizontalSwipe = {}
-        )
 }

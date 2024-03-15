@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.lifecycleScope
@@ -36,6 +37,13 @@ fun CalendarScreen(navController: NavHostController) {
     Column(
         modifier = Modifier.padding(horizontal = 10.dp)
     ) {
+
+        Text(
+            modifier = Modifier.fillMaxWidth().padding(top = 30.dp),
+            textAlign = TextAlign.Center,
+            text = screenState.formattedCurrentDate
+        )
+
         AppCalendar(
             modifier = Modifier
                 .padding(vertical = 20.dp)

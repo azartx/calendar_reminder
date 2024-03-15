@@ -1,16 +1,28 @@
 package com.solo4.calendarreminder.presentation.screens.calendar.factory
 
+import com.solo4.calendarreminder.App
 import com.solo4.calendarreminder.presentation.components.appcalendar.model.AppCalendarItemModel
 import com.solo4.calendarreminder.presentation.components.appcalendar.model.AppCalendarModel
 import com.solo4.calendarreminder.presentation.components.appcalendar.model.AppCalendarRow
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.WeekDay
+import com.solo4.calendarreminder.utils.calendar.CalendarWrapper
+import java.time.Month
+import java.time.MonthDay
 import java.time.YearMonth
+import java.time.format.TextStyle
+import java.util.Locale
 
-class CalendarModelFactory {
+class CalendarModelFactory(
+    private val calendar: CalendarWrapper = App.calendarWrapper
+) {
 
     fun createMonthModels(year: Int, month: Int): AppCalendarModel {
         val calendar = YearMonth.of(year, month)
-        return AppCalendarModel(getCalendarWeeks(calendar))
+        return AppCalendarModel(
+            formattedCurrentDate = "${Month.of(month)
+                .getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())} $year",
+            rows = getCalendarWeeks(calendar)
+        )
     }
 
     private fun getCalendarWeeks(calendar: YearMonth): List<AppCalendarRow> {

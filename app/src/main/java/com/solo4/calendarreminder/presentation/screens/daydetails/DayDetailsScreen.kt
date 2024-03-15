@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,10 +16,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -34,6 +37,7 @@ import kotlinx.coroutines.launch
 fun DayDetailsScreen(navController: NavHostController) {
     val viewModel = viewModel<DayDetailsViewModel>()
     val screenState by viewModel.screenState.collectAsState()
+    val currentDate = remember { viewModel.currentDate }
 
     LifecycleResumeEffect(key1 = "") {
         val scope = lifecycleScope.launch { viewModel.onScreenResumed() }
@@ -47,12 +51,19 @@ fun DayDetailsScreen(navController: NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
+        Text(
+            modifier = Modifier.padding(vertical = 20.dp),
+            text = currentDate,
+            fontSize = 20.sp
+        )
+
         if (screenState is DayDetailsScreenState.Loading) {
             CircularProgressIndicator()
         }
 
         Column(
             modifier = Modifier
+                .padding(horizontal = 10.dp)
                 .weight(1f)
                 .scrollable(rememberScrollState(), Orientation.Vertical)
         ) {
@@ -61,6 +72,7 @@ fun DayDetailsScreen(navController: NavHostController) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .defaultMinSize(minHeight = 48.dp)
                             .clickable {
                                 navController.navigateWithArgs(
                                     Route.EventDetailsScreenRoute,

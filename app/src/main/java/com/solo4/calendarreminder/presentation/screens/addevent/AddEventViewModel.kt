@@ -1,6 +1,5 @@
 package com.solo4.calendarreminder.presentation.screens.addevent
 
-import android.util.Log
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePickerState
@@ -123,8 +122,6 @@ class AddEventViewModel(
 
             val eventDate = getDateFromPicker()
             val eventTimeMillis = eventDate + timePickerState.value.millis
-
-            Log.e("ffff", eventDate.toString())
 
             val data = _screenState.value
             val event = CalendarEvent(

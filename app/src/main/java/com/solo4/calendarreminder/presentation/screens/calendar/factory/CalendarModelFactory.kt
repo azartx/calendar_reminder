@@ -33,9 +33,9 @@ class CalendarModelFactory {
             val previousMonthNumber = if (calendar.month.value == 1) 12 else calendar.month.value - 1
             val previousMonth = YearMonth.of(previousMonthYear, previousMonthNumber)
 
-            val needDays = 7 - firstDayWeekNumber
+            val needDays = firstDayWeekNumber - 1
 
-            for (day in (previousMonth.lengthOfMonth() - needDays) - 1..previousMonth.lengthOfMonth()) {
+            for (day in (previousMonth.lengthOfMonth() - needDays)..< previousMonth.lengthOfMonth()) {
                 days.add(
                     AppCalendarItemModel(
                         day = day,

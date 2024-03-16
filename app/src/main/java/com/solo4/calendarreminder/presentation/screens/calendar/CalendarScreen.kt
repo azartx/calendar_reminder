@@ -41,7 +41,7 @@ fun CalendarScreen(navController: NavHostController) {
         Text(
             modifier = Modifier.fillMaxWidth().padding(top = 30.dp),
             textAlign = TextAlign.Center,
-            text = screenState.formattedCurrentDate
+            text = screenState.modelFormattedDate
         )
 
         AppCalendar(

@@ -7,7 +7,6 @@ import com.solo4.calendarreminder.presentation.components.appcalendar.model.AppC
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.WeekDay
 import com.solo4.calendarreminder.utils.calendar.CalendarWrapper
 import java.time.Month
-import java.time.MonthDay
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
@@ -17,11 +16,14 @@ class CalendarModelFactory(
 ) {
 
     fun createMonthModels(year: Int, month: Int): AppCalendarModel {
-        val calendar = YearMonth.of(year, month)
+        val yearMonth = YearMonth.of(year, month)
         return AppCalendarModel(
-            formattedCurrentDate = "${Month.of(month)
+            modelFormattedDate = "${Month.of(month)
                 .getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())} $year",
-            rows = getCalendarWeeks(calendar)
+            rows = getCalendarWeeks(yearMonth),
+            dayNow = calendar.dayOfMonthOf(calendar.millisNow),
+            yearNow = calendar.yearOf(calendar.millisNow),
+            monthNow = calendar.monthOf(calendar.millisNow)
         )
     }
 

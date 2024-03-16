@@ -1,6 +1,6 @@
 package com.solo4.calendarreminder.presentation.components.appcalendar
 
-import android.util.Log
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -16,6 +17,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import com.solo4.calendarreminder.presentation.components.appcalendar.model.AppCalendarItemModel
@@ -35,8 +38,7 @@ fun AppCalendar(
                 onDragEnd = {
                     onHorizontalSwipe.invoke(draggingPosition > 0)
                 },
-                onHorizontalDrag = { change, dragAmount ->
-                    Log.e("ffff", dragAmount.toString())
+                onHorizontalDrag = { _, dragAmount ->
                     draggingPosition = dragAmount
                 }
             )
@@ -49,7 +51,22 @@ fun AppCalendar(
                     .padding(vertical = 12.dp)
             ) {
                 rowData.rowItems.forEach { rowItem ->
-                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (
+                            rowItem.year == model.yearNow &&
+                            rowItem.month == model.monthNow &&
+                            rowItem.day == model.dayNow
+                        ) {
+                            Canvas(modifier = Modifier.size(48.dp)) {
+                                drawRoundRect(
+                                    color = Color.Blue,
+                                    cornerRadius = CornerRadius(100f, 100f)
+                                )
+                            }
+                        }
                         Notifier(
                             modifier = Modifier
                                 .align(Alignment.TopEnd)
@@ -57,8 +74,7 @@ fun AppCalendar(
                         )
                         AppCalendarBlock(
                             modifier = Modifier
-                                .defaultMinSize(minHeight = 48.dp)
-                                ,
+                                .defaultMinSize(minHeight = 48.dp),
                             model = rowItem,
                             onItemClicked = onItemClick
                         )

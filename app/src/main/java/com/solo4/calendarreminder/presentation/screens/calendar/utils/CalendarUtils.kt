@@ -1,5 +1,6 @@
 package com.solo4.calendarreminder.presentation.screens.calendar.utils
 
+import androidx.compose.runtime.Stable
 import com.solo4.calendarreminder.utils.calendar.CalendarWrapper
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -25,6 +26,7 @@ private fun toTwoDigitNumber(number: Int): String {
         ?: "0$number"
 }
 
+@Stable
 fun Long.toDateByPattern(pattern: String = DATE_IN_TIME_PATTERN): String {
     return SimpleDateFormat(pattern, Locale.getDefault())
         .format(Date(this))

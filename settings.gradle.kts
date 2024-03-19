@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "calendar_reminder"
+rootProject.name = "Calendar_Reminder"
 include(":app")

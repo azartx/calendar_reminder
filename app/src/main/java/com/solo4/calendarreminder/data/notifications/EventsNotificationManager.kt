@@ -3,6 +3,7 @@ package com.solo4.calendarreminder.data.notifications
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.os.Build
 import android.util.Log
 import com.solo4.calendarreminder.App
 import com.solo4.calendarreminder.BuildConfig
@@ -18,6 +19,8 @@ class EventsNotificationManager(private val context: App) {
         scheduleBeforeMillis: Long = if (BuildConfig.DEBUG)
             Millis.SECONDS_15.millis else Millis.MINUTES_15.millis
     ) {
+        if (!canScheduleExactAlarms()) return
+
         val intent = Intent(context, CalendarNotificationsBroadcastReceiver::class.java)
         intent.putExtra(CalendarEvent::class.java.name, event)
 
@@ -37,5 +40,11 @@ class EventsNotificationManager(private val context: App) {
         } catch (e: SecurityException) {
             Log.e(this::class.java.name, "Alarm manager is not allowed.", e)
         }
+    }
+
+    fun canScheduleExactAlarms(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            alarmManager.canScheduleExactAlarms()
+        } else true
     }
 }

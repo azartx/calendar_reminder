@@ -1,5 +1,6 @@
 package com.solo4.calendarreminder
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -12,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.rememberNavController
+import com.solo4.calendarreminder.data.notifications.EventsNotificationManager
 import com.solo4.calendarreminder.presentation.navigation.AppNavigation
 import com.solo4.calendarreminder.presentation.theme.CalendarReminderTheme
 import com.solo4.calendarreminder.utils.permissions.AndroidPermissionsHandler
@@ -24,6 +26,8 @@ class MainActivity : ComponentActivity() {
     companion object {
         lateinit var permissionHandler: PermissionsHandler
     }
+
+    private val eventNotificationManager: EventsNotificationManager = App.eventsNotificationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +58,18 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+
+        if (!eventNotificationManager.canScheduleExactAlarms()) {
+            AlertDialog.Builder(this)
+                .setTitle("Alarm manager permission")
+                .setMessage("To ensure timely notifications of events you add, you need to grant permission to wake up the app.")
+                .setPositiveButton(android.R.string.ok) { d, _ ->
+                    lifecycleScope.launch {
+                        permissionHandler.askPermission(Permission.ExactAlarm)
+                    }
+                    d.dismiss()
+                }
         }
     }
 }

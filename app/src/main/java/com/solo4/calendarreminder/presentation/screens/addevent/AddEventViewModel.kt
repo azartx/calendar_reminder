@@ -6,6 +6,7 @@ import androidx.compose.material3.TimePickerState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.solo4.calendarreminder.App
+import com.solo4.calendarreminder.core.mvi.screenstate.ScreenStateDelegate
 import com.solo4.calendarreminder.data.database.CalendarEventsDatabase
 import com.solo4.calendarreminder.data.mapper.CalendarEventMapper
 import com.solo4.calendarreminder.data.model.CalendarEvent
@@ -14,8 +15,10 @@ import com.solo4.calendarreminder.data.utils.Millis
 import com.solo4.calendarreminder.presentation.navigation.AddEventScreenArgs
 import com.solo4.calendarreminder.presentation.navigation.ArgumentHolder
 import com.solo4.calendarreminder.presentation.navigation.Route
+import com.solo4.calendarreminder.presentation.screens.addevent.state.AddEventErrorState
+import com.solo4.calendarreminder.presentation.screens.addevent.state.AddEventScreenEvent
 import com.solo4.calendarreminder.presentation.screens.addevent.state.AddEventScreenState
-import com.solo4.calendarreminder.presentation.screens.calendar.utils.DATE_PATTERN
+import com.solo4.calendarreminder.presentation.screens.addevent.state.AddEventScreenStateDelegate
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.addTimezoneOffset
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.formatDateIdToDayMillis
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.getFormattedDateId
@@ -36,14 +39,19 @@ class AddEventViewModel(
         eventsDao = CalendarEventsDatabase.instance.eventsDao,
         calendarEventMapper = CalendarEventMapper()
     ),
-    private val calendar: CalendarWrapper = App.calendarWrapper
-) : ViewModel() {
-
+    private val calendar: CalendarWrapper = App.calendarWrapper,
     private val concreteDay: Long? = ArgumentHolder.getArgOrNull<
-            Route.AddEventScreenRoute,
-            AddEventScreenArgs
-            >(Route.AddEventScreenRoute)
+        Route.AddEventScreenRoute,
+        AddEventScreenArgs
+        >(Route.AddEventScreenRoute)
         ?.concreteDayId
+) : ViewModel(),
+    ScreenStateDelegate<AddEventScreenState, AddEventErrorState, AddEventScreenEvent> by AddEventScreenStateDelegate(
+        initialSelectedDate = if (concreteDay == null)
+            calendar.millisNow.toDateByPattern() else calendar.addTimezoneOffset(
+            calendar.formatDateIdToDayMillis(concreteDay)
+        ).toDateByPattern()
+    ) {
 
     val scheduleBeforeMillis = Millis.entries
         .filter {
@@ -58,6 +66,7 @@ class AddEventViewModel(
             Locale.getDefault(),
             initialSelectedDateMillis = concreteDay
                 ?.let { calendar.addTimezoneOffset(calendar.formatDateIdToDayMillis(it)) }
+                ?: calendar.addTimezoneOffset(calendar.millisNow)
         )
     )
     val datePickerState = _datePickerState.asStateFlow()
@@ -65,82 +74,62 @@ class AddEventViewModel(
     private val _timePickerState = MutableStateFlow(TimePickerState(0, 0, true))
     val timePickerState = _timePickerState.asStateFlow()
 
-    private val _screenState = MutableStateFlow(
-        AddEventScreenState().run {
-            if (concreteDay == null) this else copy(
-                selectedDate = getDateFromPicker().toDateByPattern(DATE_PATTERN)
-            )
-        }
-    )
-    val screenState = _screenState.asStateFlow()
-
     private val _navigationState = MutableSharedFlow<Route>()
     val navigationState = _navigationState.asSharedFlow()
 
     fun onTitleTextFieldChanged(value: String) {
-        _screenState.tryEmit(
-            _screenState.value.copy(
-                title = value
-            )
-        )
+        viewModelScope.launch {
+            handleEvent(AddEventScreenEvent.OnTitleTextChanged(value))
+        }
     }
 
     fun onDescriptionTextFieldChanged(value: String) {
-        _screenState.tryEmit(
-            _screenState.value.copy(
-                description = value
-            )
-        )
+        viewModelScope.launch {
+            handleEvent(AddEventScreenEvent.OnDescriptionTextChanged(value))
+        }
     }
 
     fun onDatePickerButtonPressed() {
-        _screenState.tryEmit(
-            _screenState.value.copy(
-                // Показываем дэйт пикер если нет предустановленного дня
-                isDatePickerVisible = concreteDay == null,
-                // Показываем тайм пикер, если ден был заранее установлен
-                isTimePickerVisible = concreteDay != null
+        viewModelScope.launch {
+            handleEvent(
+                AddEventScreenEvent.OnDatePickerButtonPressed(showOnlyTimePicker = concreteDay != null)
             )
-        )
+        }
     }
 
     fun onDismissDatePickerClicked() {
-        _screenState.tryEmit(
-            _screenState.value.copy(
-                isDatePickerVisible = false,
-                isTimePickerVisible = true
-            )
-        )
+        viewModelScope.launch {
+            handleEvent(AddEventScreenEvent.OnDismissDatePickerClicked)
+        }
     }
 
     fun onTimePickerDismissed() {
-        _screenState.tryEmit(
-            _screenState.value.copy(
-                isDatePickerVisible = false,
-                isTimePickerVisible = false,
-                selectedDate = (getDateFromPicker() + timePickerState.value.millis).toDateByPattern()
+        viewModelScope.launch {
+            handleEvent(
+                AddEventScreenEvent.OnTimePickerDismissed(
+                    selectedDate = (getDateFromPicker() + timePickerState.value.millis).toDateByPattern()
+                )
             )
-        )
+        }
     }
 
     fun onSchedulingFilterChipClicked(millis: Millis) {
-        _screenState.tryEmit(
-            _screenState.value.copy(
-                selectedScheduleBeforeMillis = millis
-            )
-        )
+        viewModelScope.launch {
+            handleEvent(AddEventScreenEvent.OnSchedulingFilterChipClicked(millis))
+        }
     }
 
     fun onSubmitButtonClicked() {
         viewModelScope.launch {
             // todo emit loading state
 
-            if (timePickerState.value.millis == 0L) throw Exception("Should be validated")
-
             val eventDate = getDateFromPicker()
             val eventTimeMillis = eventDate + timePickerState.value.millis
 
-            val data = _screenState.value
+            val data = screenState.value
+
+            if (!errorDelegate.isScreenStateValid(data)) return@launch
+
             val event = CalendarEvent(
                 dayMillis = getFormattedDateId(
                     day = calendar.dayOfMonthOf(eventDate),
@@ -163,6 +152,6 @@ class AddEventViewModel(
     }
 
     private fun getDateFromPicker(): Long {
-        return datePickerState.value.selectedDateMillis?.let(calendar::removeTimezoneOffset)!!
+        return datePickerState.value.selectedDateMillis?.let(calendar::removeTimezoneOffset) ?: 0
     }
 }

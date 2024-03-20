@@ -39,6 +39,7 @@ fun AddEventScreen(navController: NavHostController) {
 
     val viewModel = viewModel<AddEventViewModel>()
     val screenState by viewModel.screenState.collectAsState()
+    val errorState by viewModel.errorDelegate.errorState.collectAsState()
     val datePickerState by viewModel.datePickerState.collectAsState()
     val timePickerState by viewModel.timePickerState.collectAsState()
 
@@ -103,6 +104,7 @@ fun AddEventScreen(navController: NavHostController) {
             modifier = Modifier.fillMaxWidth(),
             value = screenState.title,
             placeholder = { Text(text = "Title") },
+            isError = errorState.isTitleValid,
             onValueChange = viewModel::onTitleTextFieldChanged
         )
 
@@ -114,6 +116,7 @@ fun AddEventScreen(navController: NavHostController) {
                 .weight(1f),
             value = screenState.description,
             placeholder = { Text(text = "Description") },
+            isError = errorState.isDescriptionValid,
             onValueChange = viewModel::onDescriptionTextFieldChanged
         )
 

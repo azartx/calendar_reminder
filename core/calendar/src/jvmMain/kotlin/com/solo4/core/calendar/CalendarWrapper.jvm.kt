@@ -1,4 +1,4 @@
-package com.solo4.calendarreminder.utils.calendar
+package com.solo4.core.calendar
 
 import java.util.Calendar
 import java.util.Date
@@ -6,7 +6,11 @@ import java.util.GregorianCalendar
 import java.util.Locale
 import java.util.TimeZone
 
-class AndroidCalendar : CalendarWrapper {
+actual fun getPlatformCalendar(): CalendarWrapper {
+    return JvmCalendar()
+}
+
+class JvmCalendar : CalendarWrapper {
 
     private val timeZone: TimeZone = TimeZone.getDefault()
     private val locale: Locale = Locale.getDefault(Locale.Category.FORMAT)

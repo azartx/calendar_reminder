@@ -1,4 +1,6 @@
-package com.solo4.calendarreminder.utils.calendar
+package com.solo4.core.calendar
+
+expect fun getPlatformCalendar(): CalendarWrapper
 
 interface CalendarWrapper {
 
@@ -19,7 +21,7 @@ interface CalendarWrapper {
     fun dayOfMonthOf(dateMillis: Long): Int
 
     /**
-    * Get milliseconds of inputted date
-    * */
+     * Get milliseconds of inputted date
+     * */
     fun millisOf(year: Int, month: Int, day: Int): Long
 }

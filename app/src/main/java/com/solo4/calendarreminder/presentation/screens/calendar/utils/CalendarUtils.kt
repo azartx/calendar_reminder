@@ -1,7 +1,7 @@
 package com.solo4.calendarreminder.presentation.screens.calendar.utils
 
 import androidx.compose.runtime.Stable
-import com.solo4.calendarreminder.utils.calendar.CalendarWrapper
+import com.solo4.core.calendar.CalendarWrapper
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

@@ -5,7 +5,7 @@ import com.solo4.calendarreminder.presentation.components.appcalendar.model.AppC
 import com.solo4.calendarreminder.presentation.components.appcalendar.model.AppCalendarModel
 import com.solo4.calendarreminder.presentation.components.appcalendar.model.AppCalendarRow
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.WeekDay
-import com.solo4.calendarreminder.utils.calendar.CalendarWrapper
+import com.solo4.core.calendar.CalendarWrapper
 import java.time.Month
 import java.time.YearMonth
 import java.time.format.TextStyle

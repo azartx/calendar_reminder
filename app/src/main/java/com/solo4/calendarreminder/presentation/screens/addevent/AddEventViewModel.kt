@@ -24,8 +24,8 @@ import com.solo4.calendarreminder.presentation.screens.calendar.utils.formatDate
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.getFormattedDateId
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.removeTimezoneOffset
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.toDateByPattern
-import com.solo4.calendarreminder.utils.calendar.CalendarWrapper
 import com.solo4.calendarreminder.utils.millis
+import com.solo4.core.calendar.CalendarWrapper
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow

@@ -1,5 +1,6 @@
 package com.solo4.calendarreminder.presentation.screens.calendar
 
+import com.solo4.core.calendar.CalendarWrapper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.solo4.calendarreminder.App
@@ -8,7 +9,6 @@ import com.solo4.calendarreminder.data.mapper.CalendarEventMapper
 import com.solo4.calendarreminder.data.repository.calendar.CalendarRepository
 import com.solo4.calendarreminder.presentation.screens.calendar.factory.CalendarModelFactory
 import com.solo4.calendarreminder.presentation.screens.calendar.mapper.CalendarItemMapper
-import com.solo4.calendarreminder.utils.calendar.CalendarWrapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

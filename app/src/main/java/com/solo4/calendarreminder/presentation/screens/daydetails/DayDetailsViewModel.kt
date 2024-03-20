@@ -12,7 +12,7 @@ import com.solo4.calendarreminder.presentation.screens.calendar.utils.DATE_PATTE
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.formatDateIdToDayMillis
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.toDateByPattern
 import com.solo4.calendarreminder.presentation.screens.daydetails.state.DayDetailsScreenState
-import com.solo4.calendarreminder.utils.calendar.CalendarWrapper
+import com.solo4.core.calendar.CalendarWrapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 

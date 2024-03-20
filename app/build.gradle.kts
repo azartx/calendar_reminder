@@ -11,8 +11,8 @@ android {
 
     defaultConfig {
         applicationId = "com.solo4.calendarreminder"
-        minSdk = 29
-        targetSdk = 34
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0.$versionCode"
 
@@ -70,10 +70,11 @@ android {
 dependencies {
 
     implementation(project(":core:mvi"))
+    implementation(project(":core:calendar"))
 
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation(libs.androidx.core.ktx)
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
-    implementation("androidx.activity:activity-compose:1.8.2")
+    implementation(libs.androidx.activity.compose)
 
     implementation(platform("androidx.compose:compose-bom:2024.02.01"))
     implementation("androidx.compose.ui:ui")

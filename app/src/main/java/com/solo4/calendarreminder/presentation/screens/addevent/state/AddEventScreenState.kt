@@ -1,6 +1,6 @@
 package com.solo4.calendarreminder.presentation.screens.addevent.state
 
-import com.solo4.calendarreminder.core.mvi.screenstate.ScreenState
+import com.solo4.core.mvi.screenstate.ScreenState
 import com.solo4.calendarreminder.data.utils.Millis
 
 data class AddEventScreenState(

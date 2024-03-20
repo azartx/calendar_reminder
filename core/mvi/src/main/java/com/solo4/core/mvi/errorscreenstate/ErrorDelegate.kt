@@ -1,6 +1,6 @@
-package com.solo4.calendarreminder.core.mvi.errorscreenstate
+package com.solo4.core.mvi.errorscreenstate
 
-import com.solo4.calendarreminder.core.mvi.screenstate.ScreenState
+import com.solo4.core.mvi.screenstate.ScreenState
 import kotlinx.coroutines.flow.StateFlow
 
 interface ErrorDelegate<S: ScreenState, E : ErrorState> {

@@ -13,5 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Calendar_Reminder"
+rootProject.name = "calendar_reminder"
 include(":app")
+include(":core:mvi")

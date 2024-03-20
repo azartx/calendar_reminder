@@ -6,7 +6,7 @@ import androidx.compose.material3.TimePickerState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.solo4.calendarreminder.App
-import com.solo4.calendarreminder.core.mvi.screenstate.ScreenStateDelegate
+import com.solo4.core.mvi.screenstate.ScreenStateDelegate
 import com.solo4.calendarreminder.data.database.CalendarEventsDatabase
 import com.solo4.calendarreminder.data.mapper.CalendarEventMapper
 import com.solo4.calendarreminder.data.model.CalendarEvent

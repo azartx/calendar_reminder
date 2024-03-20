@@ -1,6 +1,6 @@
 package com.solo4.calendarreminder.presentation.screens.addevent.state
 
-import com.solo4.calendarreminder.core.mvi.errorscreenstate.ErrorDelegate
+import com.solo4.core.mvi.errorscreenstate.ErrorDelegate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -5,10 +5,6 @@ import com.solo4.calendarreminder.data.notifications.EventsNotificationManager
 import com.solo4.calendarreminder.utils.calendar.AndroidCalendar
 import com.solo4.calendarreminder.utils.calendar.CalendarWrapper
 
-// TODO
-// handle alarm manager permission
-// handle notifications permission
-
 class App : Application() {
 
     companion object {
@@ -20,7 +16,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         app = this
-        eventsNotificationManager = EventsNotificationManager(this)
-        AndroidCalendar()
+        eventsNotificationManager = EventsNotificationManager(this, calendarWrapper)
     }
 }

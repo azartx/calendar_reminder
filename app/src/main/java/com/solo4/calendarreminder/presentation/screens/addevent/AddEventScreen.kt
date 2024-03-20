@@ -1,17 +1,20 @@
 package com.solo4.calendarreminder.presentation.screens.addevent
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TimePicker
@@ -20,11 +23,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.solo4.calendarreminder.R
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -51,7 +56,10 @@ fun AddEventScreen(navController: NavHostController) {
                 onDismissRequest = viewModel::onDismissDatePickerClicked,
                 confirmButton = {},
             ) {
-                DatePicker(state = datePickerState)
+                DatePicker(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    state = datePickerState
+                )
             }
         }
 
@@ -60,15 +68,36 @@ fun AddEventScreen(navController: NavHostController) {
                 onDismissRequest = viewModel::onTimePickerDismissed,
                 confirmButton = {},
             ) {
-                TimePicker(state = timePickerState)
+                TimePicker(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 10.dp),
+                    state = timePickerState
+                )
+
+                Text(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    text = "Send notification before minutes"
+                )
+
+                Row(
+                    modifier = Modifier
+                        .padding(vertical = 10.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    viewModel.scheduleBeforeMillis.forEach { millis ->
+                        FilterChip(
+                            selected = screenState.selectedScheduleBeforeMillis == millis,
+                            onClick = { viewModel.onSchedulingFilterChipClicked(millis) },
+                            label = { Text(text = millis.toMinutes().toString()) }
+                        )
+                    }
+                }
             }
         }
 
-        Row(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
-            Text(modifier = Modifier.weight(1f).align(Alignment.CenterVertically), text = screenState.selectedDate)
-            Spacer(modifier = Modifier.width(20.dp))
-            Button(onClick = viewModel::onDatePickerButtonPressed) { Text(text = "Select date") }
-        }
+        Spacer(modifier = Modifier.height(20.dp))
 
         TextField(
             modifier = Modifier.fillMaxWidth(),
@@ -88,12 +117,35 @@ fun AddEventScreen(navController: NavHostController) {
             onValueChange = viewModel::onDescriptionTextFieldChanged
         )
 
+        Spacer(modifier = Modifier.height(20.dp))
+
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = screenState.selectedDate,
+            readOnly = true,
+            onValueChange = {},
+            trailingIcon = {
+                Icon(
+                    modifier = Modifier.clickable(
+                        onClick = viewModel::onDatePickerButtonPressed
+                    ),
+                    painter = painterResource(id = R.drawable.ic_clock),
+                    contentDescription = null
+                )
+            }
+        )
+
         Button(
-            modifier = Modifier.padding(10.dp).fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 20.dp),
             shape = RoundedCornerShape(8.dp),
             onClick = viewModel::onSubmitButtonClicked
         ) {
-            Text(text = "Submit")
+            Text(
+                modifier = Modifier.padding(10.dp),
+                text = "Submit"
+            )
         }
     }
 }

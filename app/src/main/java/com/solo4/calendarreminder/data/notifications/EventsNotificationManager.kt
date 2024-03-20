@@ -9,8 +9,12 @@ import com.solo4.calendarreminder.App
 import com.solo4.calendarreminder.BuildConfig
 import com.solo4.calendarreminder.data.model.CalendarEvent
 import com.solo4.calendarreminder.data.utils.Millis
+import com.solo4.calendarreminder.utils.calendar.CalendarWrapper
 
-class EventsNotificationManager(private val context: App) {
+class EventsNotificationManager(
+    private val context: App,
+    private val calendar: CalendarWrapper
+) {
 
     private val alarmManager by lazy { context.getSystemService(AlarmManager::class.java) }
 
@@ -19,6 +23,7 @@ class EventsNotificationManager(private val context: App) {
         scheduleBeforeMillis: Long = if (BuildConfig.DEBUG)
             Millis.SECONDS_15.millis else Millis.MINUTES_15.millis
     ) {
+        if (!isFeatureEvent(event, scheduleBeforeMillis)) return
         if (!canScheduleExactAlarms()) return
 
         val intent = Intent(context, CalendarNotificationsBroadcastReceiver::class.java)
@@ -40,6 +45,11 @@ class EventsNotificationManager(private val context: App) {
         } catch (e: SecurityException) {
             Log.e(this::class.java.name, "Alarm manager is not allowed.", e)
         }
+    }
+
+    private fun isFeatureEvent(event: CalendarEvent, scheduleBeforeMillis: Long): Boolean {
+        val scheduleTimeMillis = event.eventTimeMillis - scheduleBeforeMillis
+        return calendar.millisNow < scheduleTimeMillis
     }
 
     fun canScheduleExactAlarms(): Boolean {

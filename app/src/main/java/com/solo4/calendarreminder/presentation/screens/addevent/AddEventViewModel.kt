@@ -10,6 +10,7 @@ import com.solo4.calendarreminder.data.database.CalendarEventsDatabase
 import com.solo4.calendarreminder.data.mapper.CalendarEventMapper
 import com.solo4.calendarreminder.data.model.CalendarEvent
 import com.solo4.calendarreminder.data.repository.addevent.AddEventRepository
+import com.solo4.calendarreminder.data.utils.Millis
 import com.solo4.calendarreminder.presentation.navigation.AddEventScreenArgs
 import com.solo4.calendarreminder.presentation.navigation.ArgumentHolder
 import com.solo4.calendarreminder.presentation.navigation.Route
@@ -38,11 +39,19 @@ class AddEventViewModel(
     private val calendar: CalendarWrapper = App.calendarWrapper
 ) : ViewModel() {
 
-    val concreteDay: Long? = ArgumentHolder.getArgOrNull<
+    private val concreteDay: Long? = ArgumentHolder.getArgOrNull<
             Route.AddEventScreenRoute,
             AddEventScreenArgs
             >(Route.AddEventScreenRoute)
         ?.concreteDayId
+
+    val scheduleBeforeMillis = Millis.entries
+        .filter {
+            if (it == Millis.NONE) return@filter true
+            if (it.toMinutes() == 0L) return@filter false
+            true
+        }
+        .sortedBy { it.millis }
 
     private val _datePickerState = MutableStateFlow(
         DatePickerState(
@@ -114,6 +123,14 @@ class AddEventViewModel(
         )
     }
 
+    fun onSchedulingFilterChipClicked(millis: Millis) {
+        _screenState.tryEmit(
+            _screenState.value.copy(
+                selectedScheduleBeforeMillis = millis
+            )
+        )
+    }
+
     fun onSubmitButtonClicked() {
         viewModelScope.launch {
             // todo emit loading state
@@ -136,7 +153,10 @@ class AddEventViewModel(
             )
             addEventRepository.saveEvent(event)
 
-            App.eventsNotificationManager.scheduleCalendarEvent(event)
+            App.eventsNotificationManager.scheduleCalendarEvent(
+                event,
+                data.selectedScheduleBeforeMillis.millis
+            )
 
             _navigationState.emit(Route.Back)
         }

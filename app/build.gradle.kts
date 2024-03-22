@@ -71,6 +71,7 @@ dependencies {
 
     implementation(project(":core:mvi"))
     implementation(project(":core:calendar"))
+    implementation(project(":core:permissions"))
 
     implementation(libs.androidx.core.ktx)
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")

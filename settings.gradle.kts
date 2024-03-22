@@ -17,3 +17,5 @@ rootProject.name = "calendar_reminder"
 include(":app")
 include(":core:mvi")
 include(":core:calendar")
+include(":core:permissions")
+include(":core:kmputils")

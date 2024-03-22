@@ -1,35 +1,42 @@
-package com.solo4.calendarreminder.utils.permissions
+package com.solo4.core.permissions
 
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+import android.provider.Settings
+import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.solo4.calendarreminder.MainActivity
+import com.solo4.core.kmputils.MultiplatformContext
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
+actual fun getPermissionHandler(context: MultiplatformContext): PermissionsHandler {
+    return AndroidPermissionsHandler(context)
+}
+
 class AndroidPermissionsHandler(
-    private var mainActivity: MainActivity?
+    private var context: MultiplatformContext?
 ) : PermissionsHandler, DefaultLifecycleObserver {
 
+    private val activity: ComponentActivity
+        get() = context?.getContext() as ComponentActivity
+
     init {
-        mainActivity?.lifecycle?.addObserver(this)
-            ?: throw Exception("Activity should be provided in constructor")
+        activity.lifecycle.addObserver(this)
     }
 
     override fun hasPermission(permission: Permission): Boolean {
-        return isGranted(mainActivity!!.checkSelfPermission(permission.name))
+        return isGranted(activity.checkSelfPermission(permission.name))
     }
 
     override suspend fun askPermission(permission: Permission): Boolean = suspendCancellableCoroutine { cont ->
-        if (permission.permissionKind == PermissionKind.System) {
+        if (permission.kind == PermissionKind.System) {
             askSystemPermission(permission)
             cont.resume(true)
         } else {
-            mainActivity!!.registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            activity.registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
                 cont.resume(isGranted)
             }
                 .launch(permission.name)
@@ -37,10 +44,10 @@ class AndroidPermissionsHandler(
     }
 
     private fun askSystemPermission(permission: Permission) {
-        if (permission is Permission.ExactAlarm) {
+        if (permission is ExactAlarm) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                mainActivity!!.startActivity(
-                    Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                activity.startActivity(
+                    Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
                 )
             }
         }
@@ -51,7 +58,8 @@ class AndroidPermissionsHandler(
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
-        mainActivity = null
+        context?.dispose()
+        context = null
         owner.lifecycle.removeObserver(this)
         super.onDestroy(owner)
     }

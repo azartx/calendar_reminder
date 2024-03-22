@@ -16,9 +16,11 @@ import androidx.navigation.compose.rememberNavController
 import com.solo4.calendarreminder.data.notifications.EventsNotificationManager
 import com.solo4.calendarreminder.presentation.navigation.AppNavigation
 import com.solo4.calendarreminder.presentation.theme.CalendarReminderTheme
-import com.solo4.calendarreminder.utils.permissions.AndroidPermissionsHandler
-import com.solo4.calendarreminder.utils.permissions.Permission
-import com.solo4.calendarreminder.utils.permissions.PermissionsHandler
+import com.solo4.core.kmputils.MultiplatformContext
+import com.solo4.core.permissions.ExactAlarm
+import com.solo4.core.permissions.Notifications
+import com.solo4.core.permissions.PermissionsHandler
+import com.solo4.core.permissions.getPermissionHandler
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -29,9 +31,16 @@ class MainActivity : ComponentActivity() {
 
     private val eventNotificationManager: EventsNotificationManager = App.eventsNotificationManager
 
+    private val multiplatformContext = object : MultiplatformContext {
+        private var _internal: MainActivity? = null
+        override fun getContext() = _internal
+        override fun setContext(context: Any?) { _internal = context as? MainActivity }
+        override fun dispose() { _internal = null }
+    }.apply { setContext(this@MainActivity) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        permissionHandler = AndroidPermissionsHandler(this)
+        permissionHandler = getPermissionHandler(multiplatformContext)
 
         askPermissions()
 
@@ -48,10 +57,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun askPermissions() {
-        if (!permissionHandler.hasPermission(Permission.Notifications)) {
+        if (!permissionHandler.hasPermission(Notifications)) {
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.CREATED) {
-                    val isNotificationPermissionGranted = permissionHandler.askPermission(Permission.Notifications)
+                    val isNotificationPermissionGranted = permissionHandler.askPermission(Notifications)
 
                     if (!isNotificationPermissionGranted) {
                         Toast.makeText(this@MainActivity, "Уведомления запрещены", Toast.LENGTH_LONG).show()
@@ -66,7 +75,7 @@ class MainActivity : ComponentActivity() {
                 .setMessage("To ensure timely notifications of events you add, you need to grant permission to wake up the app.")
                 .setPositiveButton(android.R.string.ok) { d, _ ->
                     lifecycleScope.launch {
-                        permissionHandler.askPermission(Permission.ExactAlarm)
+                        permissionHandler.askPermission(ExactAlarm)
                     }
                     d.dismiss()
                 }

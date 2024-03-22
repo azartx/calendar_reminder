@@ -1,9 +1,9 @@
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinMultiplatform)
 }
 
-group = "com.solo4.core.calendar"
+group = "com.solo4.core.kmputils"
 
 kotlin {
     androidTarget {
@@ -13,20 +13,22 @@ kotlin {
             }
         }
     }
-    
-    jvm()
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
-    
-    sourceSets {
-        commonMain.dependencies {
-            // put your Multiplatform dependencies here
+
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach {
+        it.binaries.framework {
+            baseName = "shared"
+            isStatic = true
         }
     }
+    jvm()
 }
+
 android {
-    namespace = "com.solo4.core.calendar.shared"
+    namespace = "com.solo4.core.kmputils.shared"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

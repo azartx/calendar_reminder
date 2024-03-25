@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.androidLibrary)
 }
 
@@ -36,3 +36,4 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
 }
+tasks.register("testClasses")

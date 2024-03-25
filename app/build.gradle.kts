@@ -1,13 +1,13 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp")
-    id("kotlin-parcelize")
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
     namespace = "com.solo4.calendarreminder"
-    compileSdk = 34
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.solo4.calendarreminder"
@@ -69,51 +69,45 @@ android {
 
 dependencies {
 
-    implementation(project(":core:mvi"))
-    implementation(project(":core:calendar"))
-    implementation(project(":core:permissions"))
+    // projects
+    implementation(projects.core.mvi)
+    implementation(projects.core.calendar)
+    implementation(projects.core.permissions)
 
+    // tests
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.junit)
+    androidTestImplementation(libs.androidx.test.espressoCore)
+    androidTestImplementation(libs.compose.ui.uiTestsJunit4)
+    debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.compose.ui.uiTestManifest)
+    testImplementation(libs.kotest.runnerJunit5)
+    testImplementation(libs.mockk)
+    testImplementation(libs.androidx.room.roomTesting)
+
+    // android
     implementation(libs.androidx.core.ktx)
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation(libs.androidx.activity.compose)
 
-    implementation(platform("androidx.compose:compose-bom:2024.02.01"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
+    // lifecycle
+    implementation(libs.androidx.lifecycle.lifecycleViewModelKtx)
+    implementation(libs.androidx.lifecycle.lifecycleViewModelCompose)
+    implementation(libs.androidx.lifecycle.lifecycleRuntimeCompose)
+    implementation(libs.androidx.lifecycle.lifecycleRuntimeKtx)
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    // compose
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.ui.ui)
+    implementation(libs.compose.ui.uiGraphics)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.compose.material3)
 
-    androidTestImplementation(platform("androidx.compose:compose-bom:2024.02.01"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    // room
+    implementation(libs.androidx.room.roomRuntime)
+    ksp(libs.androidx.room.roomCompiler)
+    implementation(libs.androidx.room.roomKtx)
+    implementation(libs.androidx.room.roomPaging)
 
-    testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
-    testImplementation("io.mockk:mockk:1.13.10")
-
-    val room_version = "2.6.1"
-    implementation("androidx.room:room-runtime:$room_version")
-    // To use Kotlin Symbol Processing (KSP)
-    ksp("androidx.room:room-compiler:$room_version")
-    // optional - Kotlin Extensions and Coroutines support for Room
-    implementation("androidx.room:room-ktx:$room_version")
-    // optional - Test helpers
-    testImplementation("androidx.room:room-testing:$room_version")
-    // optional - Paging 3 Integration
-    implementation("androidx.room:room-paging:$room_version")
-
-    val nav_version = "2.7.7"
-    implementation("androidx.navigation:navigation-compose:$nav_version")
-
-    val lifecycle_version = "2.7.0"
-    // ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
-    // ViewModel utilities for Compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
-
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
+    // navigation
+    implementation(libs.androidx.navigation.navigationCompose)
 }

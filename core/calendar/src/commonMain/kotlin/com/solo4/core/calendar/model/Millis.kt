@@ -1,8 +1,4 @@
-package com.solo4.calendarreminder.data.utils
-
-import androidx.compose.runtime.Stable
-
-/*@Stable
+package com.solo4.core.calendar.model;
 
 enum class Millis(val millis: Long) {
 
@@ -18,4 +14,4 @@ enum class Millis(val millis: Long) {
     fun toMinutes(): Long {
         return this.millis / 60000
     }
-}*/
+}

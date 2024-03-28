@@ -21,6 +21,7 @@ kotlin-kotlin = "1.9.22"
 kotest-runnerJunit5 = "5.8.0"
 mockk = "1.13.10"
 ksp = "1.9.22-1.0.17"
+appyx = "2.0.0-alpha10"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -51,6 +52,34 @@ kotest-runnerJunit5 = { module = "io.kotest:kotest-runner-junit5", version.ref =
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+
+appyx-navigation-navigation = { group = "com.bumble.appyx", name = "appyx-navigation", version.ref = "appyx" }
+appyx-navigation-android = { group = "com.bumble.appyx", name = "appyx-navigation-android", version.ref = "appyx" }
+appyx-navigation-desctop = { group = "com.bumble.appyx", name = "appyx-navigation-desktop", version.ref = "appyx" }
+appyx-navigation-ios-simulatorX64 = { group = "com.bumble.appyx", name = "appyx-navigation-iossimulatorarm64", version.ref = "appyx" }
+appyx-navigation-ios-x64 = { group = "com.bumble.appyx", name = "appyx-navigation-iosx64", version.ref = "appyx" }
+appyx-navigation-ios-arm64 = { group = "com.bumble.appyx", name = "appyx-navigation-iosarm64", version.ref = "appyx" }
+
+appyx-interactions-interactions = { group = "com.bumble.appyx", name = "appyx-interactions", version.ref = "appyx" }
+appyx-interactions-android = { group = "com.bumble.appyx", name = "appyx-interactions-android", version.ref = "appyx" }
+appyx-interactions-desctop = { group = "com.bumble.appyx", name = "appyx-interactions-desktop", version.ref = "appyx" }
+appyx-interactions-ios-simulatorX64 = { group = "com.bumble.appyx", name = "appyx-interactions-iossimulatorarm64", version.ref = "appyx" }
+appyx-interactions-ios-x64 = { group = "com.bumble.appyx", name = "appyx-interactions-iosx64", version.ref = "appyx" }
+appyx-interactions-ios-arm64 = { group = "com.bumble.appyx", name = "appyx-interactions-iosarm64", version.ref = "appyx" }
+
+appyx-backstack-backstack = { group = "com.bumble.appyx", name = "backstack", version.ref = "appyx" }
+appyx-backstack-android = { group = "com.bumble.appyx", name = "backstack-android", version.ref = "appyx" }
+appyx-backstack-desctop = { group = "com.bumble.appyx", name = "backstack-desktop", version.ref = "appyx" }
+appyx-backstack-ios-simulatorX64 = { group = "com.bumble.appyx", name = "backstack-iossimulatorarm64", version.ref = "appyx" }
+appyx-backstack-ios-x64 = { group = "com.bumble.appyx", name = "backstack-iosx64", version.ref = "appyx" }
+appyx-backstack-ios-arm64 = { group = "com.bumble.appyx", name = "backstack-iosarm64", version.ref = "appyx" }
+
+appyx-spotlight-spotlight = { group = "com.bumble.appyx", name = "appyx-spotlight", version.ref = "appyx" }
+appyx-spotlight-android = { group = "com.bumble.appyx", name = "appyx-spotlight-android", version.ref = "appyx" }
+appyx-spotlight-desctop = { group = "com.bumble.appyx", name = "appyx-spotlight-desktop", version.ref = "appyx" }
+appyx-spotlight-ios-simulatorX64 = { group = "com.bumble.appyx", name = "appyx-spotlight-iossimulatorarm64", version.ref = "appyx" }
+appyx-spotlight-ios-x64 = { group = "com.bumble.appyx", name = "appyx-spotlight-iosx64", version.ref = "appyx" }
+appyx-spotlight-ios-arm64 = { group = "com.bumble.appyx", name = "appyx-spotlight-iosarm64", version.ref = "appyx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

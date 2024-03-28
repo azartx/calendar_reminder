@@ -16,7 +16,7 @@ dependencyResolutionManagement {
 // using 'projects.core.mvi' notation while declaring project dependencies
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-rootProject.name = "calendar_reminder"
+rootProject.name = "Calendar_Reminder"
 include(":app")
 include(":core:mvi")
 include(":core:calendar")

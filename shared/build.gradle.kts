@@ -43,6 +43,13 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material3)
+
+                implementation(libs.appyx.navigation.navigation)
+                implementation(libs.appyx.interactions.interactions)
+                implementation(libs.appyx.backstack.backstack)
+                implementation(libs.appyx.spotlight.spotlight)
+
+                implementation(projects.core.calendar)
             }
         }
 

@@ -24,4 +24,8 @@ class IosCalendar : CalendarWrapper {
     override fun millisOf(year: Int, month: Int, day: Int): Long {
         return 1
     }
+
+    override fun getDisplayMonthName(month: Int): String {
+        return "Not implemented yet"
+    }
 }

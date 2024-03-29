@@ -3,22 +3,18 @@ package com.solo4.calendarreminder.shared.nodes.calendar.content.factory
 import appcalendar.model.AppCalendarItemModel
 import appcalendar.model.AppCalendarModel
 import appcalendar.model.AppCalendarRow
-import com.solo4.calendarreminder.presentation.screens.calendar.utils.WeekDay
 import com.solo4.core.calendar.CalendarWrapper
-import java.time.Month
-import java.time.YearMonth
-import java.time.format.TextStyle
-import java.util.Locale
+import com.solo4.core.calendar.YearMonth
+import com.solo4.core.calendar.model.WeekDay
 
 class CalendarModelFactory(
     private val calendar: CalendarWrapper
 ) {
 
     fun createMonthModels(year: Int, month: Int): AppCalendarModel {
-        val yearMonth = YearMonth.of(year, month)
+        val yearMonth = YearMonth.create(year, month)
         return AppCalendarModel(
-            modelFormattedDate = "${Month.of(month)
-                .getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())} $year",
+            modelFormattedDate = "${calendar.getDisplayMonthName(month)} $year",
             rows = getCalendarWeeks(yearMonth),
             dayNow = calendar.dayOfMonthOf(calendar.millisNow),
             yearNow = calendar.yearOf(calendar.millisNow),
@@ -34,39 +30,39 @@ class CalendarModelFactory(
 
         val days = mutableListOf<AppCalendarItemModel>()
 
-        val firstDayWeekNumber = calendar.atDay(1).dayOfWeek.value
-        val lastDayWeekNumber = calendar.atDay(calendar.lengthOfMonth()).dayOfWeek.value
+        val firstDayWeekNumber = calendar.dayOfWeekNumber(1)
+        val lastDayWeekNumber = calendar.dayOfWeekNumber(calendar.days)
 
         val isFirstDayMonday = firstDayWeekNumber == WeekDay.Monday.number
         val isLastDaySunday = lastDayWeekNumber == WeekDay.Sunday.number
 
         if (!isFirstDayMonday) {
 
-            val previousMonthYear = if (calendar.month.value == 1) calendar.year - 1 else calendar.year
-            val previousMonthNumber = if (calendar.month.value == 1) 12 else calendar.month.value - 1
-            val previousMonth = YearMonth.of(previousMonthYear, previousMonthNumber)
+            val previousMonthYear = if (calendar.month == 1) calendar.year - 1 else calendar.year
+            val previousMonthNumber = if (calendar.month == 1) 12 else calendar.month - 1
+            val previousMonth = YearMonth.create(previousMonthYear, previousMonthNumber)
 
             val needDays = firstDayWeekNumber - 1
 
-            for (day in (previousMonth.lengthOfMonth() - needDays)..< previousMonth.lengthOfMonth()) {
+            for (day in (previousMonth.days - needDays)..< previousMonth.days) {
                 days.add(
                     AppCalendarItemModel(
                         day = day,
                         month = previousMonthNumber,
                         year = previousMonthYear,
-                        dayOfWeek = previousMonth.atDay(day).dayOfWeek.value
+                        dayOfWeek = previousMonth.dayOfWeekNumber(day)
                     )
                 )
             }
         }
 
-        for (day in 1..calendar.lengthOfMonth()) {
+        for (day in 1..calendar.days) {
             days.add(
                 AppCalendarItemModel(
                     day = day,
-                    month = calendar.monthValue,
+                    month = calendar.month,
                     year = calendar.year,
-                    dayOfWeek = calendar.atDay(day).dayOfWeek.value
+                    dayOfWeek = calendar.dayOfWeekNumber(day)
                 )
             )
         }
@@ -75,17 +71,17 @@ class CalendarModelFactory(
 
             val needDays = 7 - lastDayWeekNumber
 
-            val nextMonthYear = if (calendar.month.value == 12) calendar.year + 1 else calendar.year
-            val nextMonthNumber = if (calendar.month.value == 12) 1 else calendar.month.value + 1
-            val nextMonth = YearMonth.of(nextMonthYear, nextMonthNumber)
+            val nextMonthYear = if (calendar.month == 12) calendar.year + 1 else calendar.year
+            val nextMonthNumber = if (calendar.month == 12) 1 else calendar.month + 1
+            val nextMonth = YearMonth.create(nextMonthYear, nextMonthNumber)
 
             for (day in 1..needDays) {
                 days.add(
                     AppCalendarItemModel(
                         day = day,
-                        month = calendar.monthValue,
+                        month = calendar.month,
                         year = calendar.year,
-                        dayOfWeek = nextMonth.atDay(day).dayOfWeek.value
+                        dayOfWeek = nextMonth.dayOfWeekNumber(day)
                     )
                 )
             }

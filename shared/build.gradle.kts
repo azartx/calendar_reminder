@@ -50,6 +50,8 @@ kotlin {
                 implementation(libs.appyx.spotlight.spotlight)
 
                 implementation(projects.core.calendar)
+                
+                implementation(libs.kotlinx.datetime)
             }
         }
 

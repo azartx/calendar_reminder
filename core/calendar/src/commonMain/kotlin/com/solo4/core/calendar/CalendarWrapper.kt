@@ -24,4 +24,9 @@ interface CalendarWrapper {
      * Get milliseconds of inputted date
      * */
     fun millisOf(year: Int, month: Int, day: Int): Long
+
+    /**
+     * String name of the provided month
+     * */
+    fun getDisplayMonthName(month: Int): String
 }

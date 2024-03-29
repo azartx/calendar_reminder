@@ -22,6 +22,7 @@ kotest-runnerJunit5 = "5.8.0"
 mockk = "1.13.10"
 ksp = "1.9.22-1.0.17"
 appyx = "2.0.0-alpha10"
+kotlin-datetime = "0.6.0-RC.2"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -80,6 +81,8 @@ appyx-spotlight-desctop = { group = "com.bumble.appyx", name = "appyx-spotlight-
 appyx-spotlight-ios-simulatorX64 = { group = "com.bumble.appyx", name = "appyx-spotlight-iossimulatorarm64", version.ref = "appyx" }
 appyx-spotlight-ios-x64 = { group = "com.bumble.appyx", name = "appyx-spotlight-iosx64", version.ref = "appyx" }
 appyx-spotlight-ios-arm64 = { group = "com.bumble.appyx", name = "appyx-spotlight-iosarm64", version.ref = "appyx" }
+
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlin-datetime" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

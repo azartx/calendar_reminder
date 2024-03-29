@@ -1,5 +1,8 @@
 package com.solo4.core.calendar
 
+import java.time.Month
+import java.time.YearMonth
+import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
@@ -56,6 +59,11 @@ class AndroidCalendar : CalendarWrapper {
 
     private fun setTimeMillis(dateMillis: Long) {
         calendar.time = Date(dateMillis)
+    }
+
+    override fun getDisplayMonthName(month: Int): String {
+        return Month.of(month)
+            .getDisplayName(TextStyle.FULL_STANDALONE, locale)
     }
 
     private fun invalidateCalendar() {

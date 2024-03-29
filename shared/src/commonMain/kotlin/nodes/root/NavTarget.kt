@@ -3,13 +3,13 @@ package com.solo4.calendarreminder.shared.nodes.root
 import com.bumble.appyx.utils.multiplatform.Parcelable
 import com.bumble.appyx.utils.multiplatform.Parcelize
 
-sealed class NavTarget : Parcelable {
-    @Parcelize
+sealed class NavTarget  {
+    //@Parcelize()
     data object CalendarScreen : NavTarget()
 
-    @Parcelize
+   // @Parcelize()
     data object DayDetailsScreen : NavTarget()
 
-    @Parcelize
+  //  @Parcelize()
     data object EventDetailsScreen : NavTarget()
 }

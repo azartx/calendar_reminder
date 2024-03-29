@@ -23,6 +23,7 @@ mockk = "1.13.10"
 ksp = "1.9.22-1.0.17"
 appyx = "2.0.0-alpha10"
 kotlin-datetime = "0.6.0-RC.2"
+sqldelight = "2.0.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -75,14 +76,18 @@ appyx-backstack-ios-simulatorX64 = { group = "com.bumble.appyx", name = "backsta
 appyx-backstack-ios-x64 = { group = "com.bumble.appyx", name = "backstack-iosx64", version.ref = "appyx" }
 appyx-backstack-ios-arm64 = { group = "com.bumble.appyx", name = "backstack-iosarm64", version.ref = "appyx" }
 
-appyx-spotlight-spotlight = { group = "com.bumble.appyx", name = "appyx-spotlight", version.ref = "appyx" }
-appyx-spotlight-android = { group = "com.bumble.appyx", name = "appyx-spotlight-android", version.ref = "appyx" }
-appyx-spotlight-desctop = { group = "com.bumble.appyx", name = "appyx-spotlight-desktop", version.ref = "appyx" }
-appyx-spotlight-ios-simulatorX64 = { group = "com.bumble.appyx", name = "appyx-spotlight-iossimulatorarm64", version.ref = "appyx" }
-appyx-spotlight-ios-x64 = { group = "com.bumble.appyx", name = "appyx-spotlight-iosx64", version.ref = "appyx" }
-appyx-spotlight-ios-arm64 = { group = "com.bumble.appyx", name = "appyx-spotlight-iosarm64", version.ref = "appyx" }
+appyx-spotlight-spotlight = { group = "com.bumble.appyx", name = "spotlight", version.ref = "appyx" }
+appyx-spotlight-android = { group = "com.bumble.appyx", name = "spotlight-android", version.ref = "appyx" }
+appyx-spotlight-desctop = { group = "com.bumble.appyx", name = "spotlight-desktop", version.ref = "appyx" }
+appyx-spotlight-ios-simulatorX64 = { group = "com.bumble.appyx", name = "spotlight-iossimulatorarm64", version.ref = "appyx" }
+appyx-spotlight-ios-x64 = { group = "com.bumble.appyx", name = "spotlight-iosx64", version.ref = "appyx" }
+appyx-spotlight-ios-arm64 = { group = "com.bumble.appyx", name = "spotlight-iosarm64", version.ref = "appyx" }
 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlin-datetime" }
+
+sqldelight-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
+sqldelight-jvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -93,3 +98,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-ko
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin-kotlin" }
+sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }

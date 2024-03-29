@@ -1,0 +1,9 @@
+CREATE TABLE days (
+  day_id INTEGER NOT NULL PRIMARY KEY
+);
+
+isDayExists:
+SELECT EXISTS(SELECT * FROM days WHERE day_id = :dayId);
+
+setDay:
+INSERT INTO days VALUES ?;

@@ -7,31 +7,31 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LifecycleResumeEffect
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import appcalendar.AppCalendar
-import com.solo4.calendarreminder.presentation.navigation.DayDetailsScreenArgs
-import com.solo4.calendarreminder.presentation.navigation.Route
-import com.solo4.calendarreminder.presentation.navigation.navigateWithArgs
+import com.bumble.appyx.navigation.lifecycle.LocalCommonLifecycleOwner
 import kotlinx.coroutines.launch
 
 @Composable
-fun CalendarScreen(navController: NavHostController) {
+fun CalendarScreen(
+    viewModel: CalendarViewModel,
+    onCalendarDayClicked: (Long) -> Unit,
+    onAddEventClick: () -> Unit
+) {
 
-    val viewModel: CalendarViewModel = viewModel()
-
+    val lifecycle = LocalCommonLifecycleOwner.current
     val screenState by viewModel.calendarModel.collectAsState()
 
-    LifecycleResumeEffect(key1 = "") {
-        val scope = lifecycleScope.launch { viewModel.onScreenResumed() }
-        onPauseOrDispose { scope.cancel() }
+    DisposableEffect("") {
+        val scope = lifecycle?.lifecycleScope?.launch { viewModel.onScreenResumed() }
+        onDispose {
+            scope?.cancel()
+        }
     }
 
     Column(
@@ -49,12 +49,7 @@ fun CalendarScreen(navController: NavHostController) {
                 .padding(vertical = 20.dp)
                 .fillMaxWidth(),
             model = screenState,
-            onItemClick = {
-                navController.navigateWithArgs(
-                    Route.DayDetailsScreenRoute,
-                    DayDetailsScreenArgs(it.dayId)
-                )
-            },
+            onItemClick = { onCalendarDayClicked.invoke(it.dayId) },
             onHorizontalSwipe = { isRightSwipe ->
                 viewModel.onCalendarSwiped(isRightSwipe)
             }
@@ -64,9 +59,7 @@ fun CalendarScreen(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
-            onClick = {
-                navController.navigateWithArgs(Route.AddEventScreenRoute)
-            }
+            onClick = onAddEventClick
         ) {
             Text(text = "Add new event")
         }

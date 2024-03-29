@@ -1,27 +1,18 @@
 package com.solo4.calendarreminder.shared.nodes.calendar.content
 
 import com.solo4.core.calendar.CalendarWrapper
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.solo4.calendarreminder.App
-import com.solo4.calendarreminder.data.database.CalendarEventsDatabase
-import com.solo4.calendarreminder.data.mapper.CalendarEventMapper
-import com.solo4.calendarreminder.data.repository.calendar.CalendarRepository
-import com.solo4.calendarreminder.presentation.screens.calendar.factory.CalendarModelFactory
-import com.solo4.calendarreminder.presentation.screens.calendar.mapper.CalendarItemMapper
+import com.solo4.calendarreminder.shared.data.repository.calendar.CalendarRepository
+import com.solo4.calendarreminder.shared.nodes.calendar.content.factory.CalendarModelFactory
+import com.solo4.calendarreminder.shared.nodes.calendar.content.mapper.CalendarItemMapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 class CalendarViewModel(
-    private val calendarRepository: CalendarRepository = CalendarRepository(
-        eventsDao = CalendarEventsDatabase.instance.eventsDao,
-        calendarEventMapper = CalendarEventMapper()
-    ),
-    private val calendarItemMapper: CalendarItemMapper = CalendarItemMapper(),
-    private val calendarFactory: CalendarModelFactory = CalendarModelFactory(),
-    calendar: CalendarWrapper = App.calendarWrapper
-) : ViewModel() {
+    private val calendarRepository: CalendarRepository,
+    private val calendarItemMapper: CalendarItemMapper,
+    private val calendarFactory: CalendarModelFactory,
+    calendar: CalendarWrapper
+) /*: ViewModel()*/ {
 
     private var calendarDate = calendar.yearOf(calendar.millisNow) to
             calendar.monthOf(calendar.millisNow)
@@ -36,18 +27,19 @@ class CalendarViewModel(
     }
 
     private suspend fun updateDaysEventsState() {
-        val updatedItems = calendarItemMapper.updateEventVisibility(_calendarModel.value) {
+        /*val updatedItems = calendarItemMapper.updateEventVisibility(_calendarModel.value) {
             calendarRepository.hasDayEvents(it)
-        }
-        _calendarModel.emit(updatedItems)
+        }*/
+       // _calendarModel.emit(updatedItems)
     }
 
     fun onCalendarSwiped(rightSwipe: Boolean) {
-        viewModelScope.launch {
+        // TODO
+        /*viewModelScope.launch {
             if (rightSwipe) loadPreviousCalendar() else loadNextCalendar()
 
             updateDaysEventsState()
-        }
+        }*/
     }
 
     private suspend fun loadNextCalendar() {

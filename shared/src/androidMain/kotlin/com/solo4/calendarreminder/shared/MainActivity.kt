@@ -12,7 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.solo4.calendarreminder.presentation.navigation.AppNavigation
+import com.bumble.appyx.navigation.modality.AncestryInfo
+import com.bumble.appyx.navigation.modality.NodeContext
+import com.bumble.appyx.utils.customisations.NodeCustomisationDirectoryImpl
+import com.solo4.calendarreminder.shared.nodes.root.RootNode
 import com.solo4.calendarreminder.shared.theme.CalendarReminderTheme
 import com.solo4.core.calendar.getPlatformCalendar
 import com.solo4.core.kmputils.MultiplatformContext
@@ -42,6 +45,16 @@ class MainActivity : ComponentActivity() {
         getPlatformCalendar()
     )
 
+    private val rootNode: RootNode by lazy {
+        RootNode(
+            nodeContext = NodeContext(
+                ancestryInfo = AncestryInfo.Root,
+                savedStateMap = emptyMap(),
+                customisations = NodeCustomisationDirectoryImpl()
+            )
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         permissionHandler = getPermissionHandler(multiplatformContext)
@@ -54,7 +67,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNavigation(rememberNavController())
+                    rootNode.Content(modifier = Modifier.fillMaxSize())
                 }
             }
         }

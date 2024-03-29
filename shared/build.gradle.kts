@@ -2,9 +2,18 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.sqldelight)
 }
 
 group = "com.solo4.calendarreminder.shared"
+
+sqldelight {
+    databases {
+        create("CalendarDatabase") {
+            packageName.set("com.solo4.calendarreminder")
+        }
+    }
+}
 
 kotlin {
     applyDefaultHierarchyTemplate()
@@ -73,6 +82,20 @@ kotlin {
                 implementation(libs.compose.ui.uiGraphics)
                 implementation(libs.compose.ui.tooling.preview)
                 implementation(libs.compose.material3)
+
+                implementation(libs.sqldelight.android)
+            }
+        }
+
+        val iosMain by getting {
+            dependencies {
+                implementation(libs.sqldelight.native)
+            }
+        }
+
+        val jvmMain by getting {
+            dependencies {
+                implementation(libs.sqldelight.jvm)
             }
         }
     }

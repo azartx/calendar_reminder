@@ -9,6 +9,7 @@ import com.bumble.appyx.components.backstack.BackStack
 import com.bumble.appyx.components.backstack.BackStackModel
 import com.bumble.appyx.components.backstack.ui.fader.BackStackFader
 import com.bumble.appyx.navigation.composable.AppyxNavigationContainer
+import com.solo4.calendarreminder.shared.nodes.calendar.CalendarNode
 
 class RootNode(
     nodeContext: NodeContext,
@@ -33,7 +34,7 @@ class RootNode(
 
     override fun buildChildNode(navTarget: NavTarget, nodeContext: NodeContext): Node<*> {
         return when (navTarget) {
-            is NavTarget.CalendarScreen -> node(nodeContext) {  }
+            is NavTarget.CalendarScreen -> CalendarNode(nodeContext, backStack)
             is NavTarget.DayDetailsScreen -> node(nodeContext) {  }
             is NavTarget.EventDetailsScreen -> node(nodeContext) {  }
         }

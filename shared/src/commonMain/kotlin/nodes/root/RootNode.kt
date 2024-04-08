@@ -7,6 +7,7 @@ import com.bumble.appyx.navigation.node.Node
 import com.bumble.appyx.navigation.node.node
 import com.bumble.appyx.components.backstack.BackStack
 import com.bumble.appyx.components.backstack.BackStackModel
+import com.bumble.appyx.components.backstack.operation.pop
 import com.bumble.appyx.components.backstack.ui.fader.BackStackFader
 import com.bumble.appyx.navigation.composable.AppyxNavigationContainer
 import com.solo4.calendarreminder.shared.nodes.calendar.CalendarNode
@@ -38,5 +39,9 @@ class RootNode(
             is NavTarget.DayDetailsScreen -> node(nodeContext) {  }
             is NavTarget.EventDetailsScreen -> node(nodeContext) {  }
         }
+    }
+
+    fun pop() {
+        backStack.pop()
     }
 }

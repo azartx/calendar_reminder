@@ -3,20 +3,17 @@ package com.solo4.calendarreminder.shared
 import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.bumble.appyx.navigation.modality.AncestryInfo
-import com.bumble.appyx.navigation.modality.NodeContext
-import com.bumble.appyx.utils.customisations.NodeCustomisationDirectoryImpl
+import com.bumble.appyx.navigation.integration.NodeComponentActivity
+import com.bumble.appyx.navigation.integration.NodeHost
+import com.bumble.appyx.navigation.platform.AndroidLifecycle
 import com.solo4.calendarreminder.shared.nodes.root.RootNode
-import com.solo4.calendarreminder.shared.theme.CalendarReminderTheme
 import com.solo4.core.calendar.getPlatformCalendar
 import com.solo4.core.kmputils.MultiplatformContext
 import com.solo4.core.permissions.ExactAlarm
@@ -27,7 +24,7 @@ import com.solo4.domain.eventmanager.EventsNotificationManager
 import com.solo4.domain.eventmanager.getEventsNotificationManager
 import kotlinx.coroutines.launch
 
-class MainActivity : ComponentActivity() {
+class MainActivity : NodeComponentActivity() {
 
     companion object {
         lateinit var permissionHandler: PermissionsHandler
@@ -45,15 +42,7 @@ class MainActivity : ComponentActivity() {
         getPlatformCalendar()
     )
 
-    private val rootNode: RootNode by lazy {
-        RootNode(
-            nodeContext = NodeContext(
-                ancestryInfo = AncestryInfo.Root,
-                savedStateMap = emptyMap(),
-                customisations = NodeCustomisationDirectoryImpl()
-            )
-        )
-    }
+    private val navigator = Navigator()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,12 +51,16 @@ class MainActivity : ComponentActivity() {
         askPermissions()
 
         setContent {
-            CalendarReminderTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    rootNode.Content(modifier = Modifier.fillMaxSize())
+            MaterialTheme {
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    CompositionLocalProvider(LocalNavigator provides navigator) {
+                        NodeHost(
+                            lifecycle = AndroidLifecycle(lifecycle),
+                            integrationPoint = appyxV2IntegrationPoint
+                        ) { nodeContext ->
+                            RootNode(nodeContext = nodeContext)
+                        }
+                    }
                 }
             }
         }

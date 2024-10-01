@@ -1,6 +1,6 @@
 package com.solo4.calendarreminder.presentation.screens.daydetails.state
 
-import com.solo4.calendarreminder.data.model.CalendarEvent
+import com.solo4.core.calendar.model.CalendarEvent
 
 sealed interface DayDetailsScreenState {
 

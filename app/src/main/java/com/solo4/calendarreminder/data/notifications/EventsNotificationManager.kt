@@ -7,9 +7,9 @@ import android.os.Build
 import android.util.Log
 import com.solo4.calendarreminder.App
 import com.solo4.calendarreminder.BuildConfig
-import com.solo4.calendarreminder.data.model.CalendarEvent
-import com.solo4.calendarreminder.data.utils.Millis
 import com.solo4.core.calendar.CalendarWrapper
+import com.solo4.core.calendar.model.CalendarEvent
+import com.solo4.core.calendar.model.Millis
 
 class EventsNotificationManager(
     private val context: App,

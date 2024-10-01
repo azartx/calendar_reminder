@@ -9,9 +9,7 @@ import com.solo4.calendarreminder.App
 import com.solo4.core.mvi.screenstate.ScreenStateDelegate
 import com.solo4.calendarreminder.data.database.CalendarEventsDatabase
 import com.solo4.calendarreminder.data.mapper.CalendarEventMapper
-import com.solo4.calendarreminder.data.model.CalendarEvent
 import com.solo4.calendarreminder.data.repository.addevent.AddEventRepository
-import com.solo4.calendarreminder.data.utils.Millis
 import com.solo4.calendarreminder.presentation.navigation.AddEventScreenArgs
 import com.solo4.calendarreminder.presentation.navigation.ArgumentHolder
 import com.solo4.calendarreminder.presentation.navigation.Route
@@ -26,6 +24,8 @@ import com.solo4.calendarreminder.presentation.screens.calendar.utils.removeTime
 import com.solo4.calendarreminder.presentation.screens.calendar.utils.toDateByPattern
 import com.solo4.calendarreminder.utils.millis
 import com.solo4.core.calendar.CalendarWrapper
+import com.solo4.core.calendar.model.CalendarEvent
+import com.solo4.core.calendar.model.Millis
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow

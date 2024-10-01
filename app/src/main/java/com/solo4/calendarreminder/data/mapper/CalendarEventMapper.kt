@@ -3,7 +3,7 @@ package com.solo4.calendarreminder.data.mapper
 import com.solo4.calendarreminder.data.database.entity.DayEntity
 import com.solo4.calendarreminder.data.database.entity.DayEventRelation
 import com.solo4.calendarreminder.data.database.entity.EventEntity
-import com.solo4.calendarreminder.data.model.CalendarEvent
+import com.solo4.core.calendar.model.CalendarEvent
 
 class CalendarEventMapper {
 

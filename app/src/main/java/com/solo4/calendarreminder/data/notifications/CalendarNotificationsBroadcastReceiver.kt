@@ -7,15 +7,15 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.solo4.calendarreminder.R
-import com.solo4.calendarreminder.data.model.CalendarEvent
-import com.solo4.calendarreminder.utils.parcelableExtra
+import com.solo4.calendarreminder.utils.serializableExtra
+import com.solo4.core.calendar.model.CalendarEvent
 
 private const val CALENDAR_EVENTS_CHANNEL_ID = "CM_channel"
 
 class CalendarNotificationsBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        val event = intent.parcelableExtra<CalendarEvent>(CalendarEvent::class.java.name) ?: return
+        val event = intent.serializableExtra<CalendarEvent>(CalendarEvent::class.java.name) ?: return
         context?.apply {
             val nm = getSystemService(NotificationManager::class.java)
 

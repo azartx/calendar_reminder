@@ -2,7 +2,7 @@ package com.solo4.calendarreminder.data.repository.addevent
 
 import com.solo4.calendarreminder.data.database.dao.EventsDao
 import com.solo4.calendarreminder.data.mapper.CalendarEventMapper
-import com.solo4.calendarreminder.data.model.CalendarEvent
+import com.solo4.core.calendar.model.CalendarEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

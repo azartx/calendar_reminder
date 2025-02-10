@@ -7,6 +7,16 @@ interface Permission {
     val kind: PermissionKind
 }
 
-expect object Notifications : Permission
+expect object Notifications : Permission {
 
-expect object ExactAlarm : Permission
+    override val name: String
+
+    override val kind: PermissionKind
+}
+
+expect object ExactAlarm : Permission {
+
+    override val name: String
+
+    override val kind: PermissionKind
+}

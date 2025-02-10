@@ -6,15 +6,19 @@ import com.solo4.calendarreminder.calendar.nodes.root.RootNode
 import kotlinx.coroutines.CoroutineScope
 
 val LocalNavigator = compositionLocalOf { Navigator() }
-
-class Navigator : NodeReadyObserver<RootNode> {
+// TODO Выпилить сраный appyx
+class Navigator {
 
     private lateinit var rootNode: RootNode
     private lateinit var lifecycleScope: CoroutineScope
 
-    override fun init(node: RootNode) {
-        rootNode = node
-        lifecycleScope = node.lifecycleScope
+//    override fun init(node: RootNode) {
+//        rootNode = node
+//        lifecycleScope = node.lifecycleScope
+//    }
+
+    fun init(node: RootNode) {
+
     }
 
     fun back() {

@@ -7,15 +7,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import appcalendar.AppCalendar
-import com.bumble.appyx.navigation.lifecycle.LocalCommonLifecycleOwner
-import kotlinx.coroutines.launch
 
 @Composable
 fun CalendarScreen(
@@ -24,15 +21,7 @@ fun CalendarScreen(
     onAddEventClick: () -> Unit
 ) {
 
-    val lifecycle = LocalCommonLifecycleOwner.current
     val screenState by viewModel.calendarModel.collectAsState()
-
-    DisposableEffect("") {
-        val scope = lifecycle?.lifecycleScope?.launch { viewModel.onScreenResumed() }
-        onDispose {
-            scope?.cancel()
-        }
-    }
 
     Column(
         modifier = Modifier.padding(horizontal = 10.dp)

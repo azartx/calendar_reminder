@@ -14,32 +14,25 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.solo4.calendarreminder.calendar.nodes.daydetails.content.state.DayDetailsScreenState
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import com.solo4.core.calendar.model.CalendarEvent
 
 @Composable
 fun DayDetailsScreen(
-    viewModel: DayDetailsViewModel
+    viewModel: DayDetailsViewModel,
+    onEventDetailsClick: (event: CalendarEvent) -> Unit,
+    onAddEventClick: (dayId: Long) -> Unit
 ) {
     val screenState by viewModel.screenState.collectAsState()
     val currentDate = remember { viewModel.currentDate }
-    val scope = rememberCoroutineScope()
-
-    DisposableEffect("") {
-        scope.launch { viewModel.onScreenResumed() }
-        onDispose { scope.cancel() }
-    }
 
     Column(
         modifier = Modifier
@@ -70,12 +63,7 @@ fun DayDetailsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .defaultMinSize(minHeight = 48.dp)
-                            .clickable {
-//                                navController.navigateWithArgs(
-//                                    Route.EventDetailsScreenRoute,
-//                                    EventDetailsScreenArgs(event)
-//                                )
-                            }
+                            .clickable { onEventDetailsClick.invoke(event) }
                     ) {
                         Text(
                             modifier = Modifier.padding(vertical = 8.dp),
@@ -96,12 +84,7 @@ fun DayDetailsScreen(
         }
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = {
-//                navController.navigateWithArgs(
-//                    Route.AddEventScreenRoute,
-//                    AddEventScreenArgs(viewModel.dayId)
-//                )
-            }
+            onClick = { onAddEventClick.invoke(viewModel.dayId) }
         ) {
             Text(text = "Add event")
         }

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.room)
+    alias(libs.plugins.ksp)
 }
 
 group = "com.solo4.calendarreminder.shared"
@@ -134,10 +135,11 @@ dependencies {
     implementation(projects.core.calendar)
     implementation(projects.domain.eventmanager)*/
 
-    /*add("kspAndroid", libs.androidx.room.roomCompiler)
+    // room compiler plugin dependencies
+    add("kspAndroid", libs.androidx.room.roomCompiler)
     add("kspIosSimulatorArm64", libs.androidx.room.roomCompiler)
     add("kspIosX64", libs.androidx.room.roomCompiler)
-    add("kspIosArm64", libs.androidx.room.roomCompiler)*/
+    add("kspIosArm64", libs.androidx.room.roomCompiler)
 }
 
 tasks.register("testClasses")

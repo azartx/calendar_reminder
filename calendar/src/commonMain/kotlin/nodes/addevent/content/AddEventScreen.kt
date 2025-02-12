@@ -26,33 +26,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.solo4.calendarreminder.shared.calendar.generated.resources.Res
 import com.solo4.calendarreminder.shared.calendar.generated.resources.ic_clock
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import kotlin.reflect.KClass
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEventScreen(
-    concreteDay: Long?,
+    viewModel: AddEventViewModel,
     onBackPressed: () -> Unit,
 ) {
     val lifecycle = LocalLifecycleOwner.current
-    val viewModel = viewModel<AddEventViewModel>(factory = object : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
-            return AddEventViewModel(
-                concreteDay = concreteDay
-            ) as T
-        }
-    })
     val screenState by viewModel.screenState.collectAsState()
     val errorState by viewModel.errorDelegate.errorState.collectAsState()
     val datePickerState by viewModel.datePickerState.collectAsState()

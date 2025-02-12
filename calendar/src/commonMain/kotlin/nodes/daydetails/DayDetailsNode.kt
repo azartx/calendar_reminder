@@ -2,9 +2,6 @@ package com.solo4.calendarreminder.calendar.nodes.daydetails
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bumble.appyx.components.backstack.BackStack
 import com.bumble.appyx.components.backstack.operation.push
@@ -15,7 +12,6 @@ import com.solo4.calendarreminder.calendar.nodes.daydetails.content.DayDetailsSc
 import com.solo4.calendarreminder.calendar.nodes.daydetails.content.DayDetailsViewModel
 import com.solo4.calendarreminder.calendar.nodes.root.NavTarget
 import com.solo4.core.calendar.getPlatformCalendar
-import kotlin.reflect.KClass
 
 class DayDetailsNode(
     nodeContext: NodeContext,
@@ -27,7 +23,7 @@ class DayDetailsNode(
 
     @Composable
     override fun Content(modifier: Modifier) {
-        val viewModel = viewModel<DayDetailsViewModel>(key = "qwe") {
+        val viewModel = viewModel<DayDetailsViewModel>(key = this.toString()) {
             DayDetailsViewModel(
                 repository = repository,
                 calendar = getPlatformCalendar(),

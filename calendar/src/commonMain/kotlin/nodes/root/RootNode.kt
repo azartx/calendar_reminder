@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.bumble.appyx.navigation.modality.NodeContext
 import com.bumble.appyx.navigation.node.Node
-import com.bumble.appyx.navigation.node.node
 import com.bumble.appyx.components.backstack.BackStack
 import com.bumble.appyx.components.backstack.BackStackModel
 import com.bumble.appyx.components.backstack.operation.pop
@@ -13,6 +12,7 @@ import com.bumble.appyx.navigation.composable.AppyxNavigationContainer
 import com.solo4.calendarreminder.calendar.nodes.addevent.AddEventNode
 import com.solo4.calendarreminder.calendar.nodes.calendar.CalendarNode
 import com.solo4.calendarreminder.calendar.nodes.daydetails.DayDetailsNode
+import com.solo4.calendarreminder.calendar.nodes.eventdetails.EventDetailsNode
 import com.solo4.core.calendar.getPlatformCalendar
 import com.solo4.core.kmputils.MultiplatformContext
 import com.solo4.domain.eventmanager.EventsNotificationManager
@@ -49,7 +49,8 @@ class RootNode(
             is NavTarget.CalendarScreen -> CalendarNode(nodeContext, backStack)
             is NavTarget.DayDetailsScreen ->
                 DayDetailsNode(nodeContext, backStack, navTarget.dayId)
-            is NavTarget.EventDetailsScreen -> node(nodeContext) {  }
+            is NavTarget.EventDetailsScreen ->
+                EventDetailsNode(nodeContext, backStack, navTarget.event)
             is NavTarget.AddEventScreen ->
                 AddEventNode(nodeContext, backStack, navTarget.concreteDay)
         }

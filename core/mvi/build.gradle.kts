@@ -24,6 +24,9 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.kotlin.coroutines)
+                implementation(project.dependencies.platform(libs.compose.bom))
+                implementation(libs.compose.runtime)
+                implementation(libs.compose.ui.ui)
             }
         }
     }

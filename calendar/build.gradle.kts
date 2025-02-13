@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.room)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.serialization)
 }
 
 group = "com.solo4.calendarreminder.shared"
@@ -43,6 +44,9 @@ kotlin {
                 implementation(libs.appyx.backstack.backstack)
                 implementation(libs.appyx.spotlight.spotlight)
 
+                implementation(libs.decompose.decompose)
+                implementation(libs.decompose.extensionsCompose)
+
                 implementation(projects.core.calendar)
                 implementation(projects.core.mvi)
                 implementation(projects.core.permissions)
@@ -55,6 +59,8 @@ kotlin {
 
                 implementation(libs.androidx.room.roomRuntime)
                 implementation(libs.sqlite.bundled)
+                
+                implementation(libs.serialization)
             }
         }
 

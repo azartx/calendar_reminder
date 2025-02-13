@@ -6,14 +6,14 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.arkivanov.decompose.defaultComponentContext
+import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.bumble.appyx.navigation.integration.NodeActivity
-import com.bumble.appyx.navigation.integration.NodeHost
-import com.bumble.appyx.navigation.platform.AndroidLifecycle
-import com.solo4.calendarreminder.calendar.nodes.root.RootNode
+import com.solo4.calendarreminder.calendar.nodes.root.RootComponent
 import com.solo4.core.calendar.getPlatformCalendar
 import com.solo4.core.kmputils.MultiplatformContext
 import com.solo4.core.permissions.ExactAlarm
@@ -33,8 +33,13 @@ class MainActivity : NodeActivity() {
     private val multiplatformContext = object : MultiplatformContext {
         private var _internal: MainActivity? = null
         override fun getContext() = _internal
-        override fun setContext(context: Any?) { _internal = context as? MainActivity }
-        override fun dispose() { _internal = null }
+        override fun setContext(context: Any?) {
+            _internal = context as? MainActivity
+        }
+
+        override fun dispose() {
+            _internal = null
+        }
     }.apply { setContext(this@MainActivity) }
 
     private val eventNotificationManager: EventsNotificationManager = getEventsNotificationManager(
@@ -42,26 +47,19 @@ class MainActivity : NodeActivity() {
         getPlatformCalendar()
     )
 
-    private val navigator = Navigator()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val rootComponent = RootComponent(defaultComponentContext())
         permissionHandler = getPermissionHandler(multiplatformContext)
 
         askPermissions()
 
         setContent {
             MaterialTheme {
-                Surface(color = MaterialTheme.colorScheme.background) {
-                    CompositionLocalProvider(LocalNavigator provides navigator) {
-                        NodeHost(
-                            lifecycle = AndroidLifecycle(lifecycle),
-                            integrationPoint = appyxIntegrationPoint
-                        ) { nodeContext ->
-                            RootNode(
-                                nodeContext = nodeContext,
-                                multiplatformContext = multiplatformContext
-                            )
+                Children(rootComponent.stack) {
+                    Surface(color = MaterialTheme.colorScheme.background) {
+                        when (val child = it.instance) {
+                            else -> child.Content(Modifier)
                         }
                     }
                 }
@@ -73,10 +71,15 @@ class MainActivity : NodeActivity() {
         if (!permissionHandler.hasPermission(Notifications)) {
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.CREATED) {
-                    val isNotificationPermissionGranted = permissionHandler.askPermission(Notifications)
+                    val isNotificationPermissionGranted =
+                        permissionHandler.askPermission(Notifications)
 
                     if (!isNotificationPermissionGranted) {
-                        Toast.makeText(this@MainActivity, "Уведомления запрещены", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Уведомления запрещены",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             }

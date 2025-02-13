@@ -28,6 +28,7 @@ kotlin-datetime = "0.6.0-RC.2"
 sqldelight = "2.0.0"
 serialization = "1.7.3"
 kotlin-coroutines = "1.8.0"
+decompose = "3.2.2"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -55,6 +56,7 @@ compose-ui-ui = { module="androidx.compose.ui:ui" }
 compose-ui-uiTestManifest = { module="androidx.compose.ui:ui-test-manifest" }
 compose-ui-uiGraphics = { module="androidx.compose.ui:ui-graphics" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-runtime = { module = "androidx.compose.runtime:runtime" }
 compose-material3 = { module = "androidx.compose.material3:material3" }
 kotest-runnerJunit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest-runnerJunit5" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
@@ -65,6 +67,8 @@ appyx-navigation-navigation = { group = "com.bumble.appyx", name = "appyx-naviga
 appyx-interactions-interactions = { group = "com.bumble.appyx", name = "appyx-interactions", version.ref = "appyx" }
 appyx-backstack-backstack = { group = "com.bumble.appyx", name = "backstack", version.ref = "appyx" }
 appyx-spotlight-spotlight = { group = "com.bumble.appyx", name = "spotlight", version.ref = "appyx" }
+decompose-decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
+decompose-extensionsCompose = { module = "com.arkivanov.decompose:extensions-compose", version.ref = "decompose" }
 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlin-datetime" }
 kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }

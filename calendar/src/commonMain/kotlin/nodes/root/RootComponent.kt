@@ -19,11 +19,13 @@ import com.solo4.calendarreminder.calendar.nodes.daydetails.DayDetailsComponent
 import com.solo4.calendarreminder.calendar.nodes.eventdetails.EventDetailsComponent
 import com.solo4.core.mvi.decompose.ViewComponent
 import com.solo4.core.mvi.decompose.IRootComponent
+import org.koin.core.component.KoinComponent
 
 class RootComponent(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
 ) : ComponentContext by componentContext,
-    IRootComponent<NavTarget> {
+    IRootComponent<NavTarget>,
+    KoinComponent {
 
     private val navigation = StackNavigation<NavTarget>()
 
@@ -50,10 +52,10 @@ class RootComponent(
         componentContext: ComponentContext
     ): ViewComponent<NavTarget> {
         return when (navTarget) {
-            is NavTarget.CalendarScreen -> CalendarComponent(navigation)
-            is NavTarget.DayDetailsScreen -> DayDetailsComponent(navigation, navTarget.dayId)
-            is NavTarget.EventDetailsScreen -> EventDetailsComponent(navigation, navTarget.event)
-            is NavTarget.AddEventScreen -> AddEventComponent(navigation, navTarget.concreteDay)
+            is NavTarget.CalendarScreen -> CalendarComponent(componentContext, navigation)
+            is NavTarget.DayDetailsScreen -> DayDetailsComponent(componentContext, navigation, navTarget.dayId)
+            is NavTarget.EventDetailsScreen -> EventDetailsComponent(componentContext, navigation, navTarget.event)
+            is NavTarget.AddEventScreen -> AddEventComponent(componentContext, navigation, navTarget.concreteDay)
         }
     }
 

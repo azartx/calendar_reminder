@@ -1,11 +1,10 @@
 package com.solo4.calendarreminder.calendar.nodes.calendar.content
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.solo4.core.calendar.CalendarWrapper
 import com.solo4.calendarreminder.calendar.data.repository.calendar.CalendarRepository
 import com.solo4.calendarreminder.calendar.nodes.calendar.content.factory.CalendarModelFactory
 import com.solo4.calendarreminder.calendar.nodes.calendar.content.mapper.CalendarItemMapper
+import com.solo4.core.mvi.decompose.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

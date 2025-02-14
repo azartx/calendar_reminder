@@ -56,6 +56,8 @@ kotlin {
                 implementation(libs.sqlite.bundled)
                 
                 implementation(libs.serialization)
+
+                implementation(libs.koin.core)
             }
         }
 
@@ -77,6 +79,8 @@ kotlin {
                 implementation(libs.compose.ui.uiGraphics)
                 implementation(libs.compose.ui.tooling.preview)
                 implementation(libs.compose.material3)
+
+                implementation(libs.koin.android)
             }
         }
     }

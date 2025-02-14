@@ -1,6 +1,5 @@
 package com.solo4.calendarreminder.calendar.data.repository.calendar
 
-import com.solo4.calendarreminder.data.database.CalendarEventsDatabase
 import com.solo4.calendarreminder.data.database.dao.EventsDao
 import com.solo4.calendarreminder.data.mapper.CalendarEventMapper
 import com.solo4.core.calendar.model.CalendarEvent
@@ -9,8 +8,8 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 
 class CalendarRepository(
-    private val mapper: CalendarEventMapper = CalendarEventMapper(),
-    private val eventsDao: EventsDao = CalendarEventsDatabase.InstanceHolder.instance.eventsDao // TODO инжектить через di
+    private val mapper: CalendarEventMapper,
+    private val eventsDao: EventsDao
 ) {
 
     suspend fun getMonthEvents(yearMonthDay: Long): List<CalendarEvent> {

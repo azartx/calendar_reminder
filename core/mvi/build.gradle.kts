@@ -26,6 +26,7 @@ kotlin {
                 implementation(libs.kotlin.coroutines)
 
                 api(libs.decompose.decompose)
+                api(libs.koin.core)
             }
         }
     }

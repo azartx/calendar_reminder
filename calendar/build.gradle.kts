@@ -39,11 +39,6 @@ kotlin {
                 implementation(compose.material3)
                 implementation(compose.components.resources)
 
-                implementation(libs.appyx.navigation.navigation)
-                implementation(libs.appyx.interactions.interactions)
-                implementation(libs.appyx.backstack.backstack)
-                implementation(libs.appyx.spotlight.spotlight)
-
                 implementation(libs.decompose.decompose)
                 implementation(libs.decompose.extensionsCompose)
 

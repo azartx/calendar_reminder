@@ -23,7 +23,6 @@ kotlin-kotlin = "2.0.20"
 kotest-runnerJunit5 = "5.8.0"
 mockk = "1.13.10"
 ksp = "2.0.20-1.0.25"
-appyx = "2.0.1"
 kotlin-datetime = "0.6.0-RC.2"
 sqldelight = "2.0.0"
 serialization = "1.7.3"
@@ -63,10 +62,6 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 
-appyx-navigation-navigation = { group = "com.bumble.appyx", name = "appyx-navigation", version.ref = "appyx" }
-appyx-interactions-interactions = { group = "com.bumble.appyx", name = "appyx-interactions", version.ref = "appyx" }
-appyx-backstack-backstack = { group = "com.bumble.appyx", name = "backstack", version.ref = "appyx" }
-appyx-spotlight-spotlight = { group = "com.bumble.appyx", name = "spotlight", version.ref = "appyx" }
 decompose-decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 decompose-extensionsCompose = { module = "com.arkivanov.decompose:extensions-compose", version.ref = "decompose" }
 

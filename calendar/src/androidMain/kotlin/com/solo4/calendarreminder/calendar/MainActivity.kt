@@ -3,8 +3,8 @@ package com.solo4.calendarreminder.calendar
 import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -21,7 +21,7 @@ import com.solo4.domain.eventmanager.EventsNotificationManager
 import com.solo4.domain.eventmanager.getEventsNotificationManager
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
     companion object {
         lateinit var permissionHandler: PermissionsHandler

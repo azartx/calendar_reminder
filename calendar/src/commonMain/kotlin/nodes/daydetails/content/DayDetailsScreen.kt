@@ -27,6 +27,7 @@ import com.solo4.core.calendar.model.CalendarEvent
 
 @Composable
 fun DayDetailsScreen(
+    modifier: Modifier,
     viewModel: DayDetailsViewModel,
     onEventDetailsClick: (event: CalendarEvent) -> Unit,
     onAddEventClick: (dayId: Long) -> Unit
@@ -35,7 +36,7 @@ fun DayDetailsScreen(
     val currentDate = remember { viewModel.currentDate }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(10.dp)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally

@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.navigate
 import com.arkivanov.decompose.router.stack.push
 import com.solo4.calendarreminder.calendar.data.repository.calendar.CalendarRepository
 import com.solo4.calendarreminder.calendar.nodes.calendar.content.CalendarScreen

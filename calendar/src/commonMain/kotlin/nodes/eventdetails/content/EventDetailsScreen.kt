@@ -16,12 +16,13 @@ import com.solo4.calendarreminder.calendar.nodes.calendar.content.utils.toDateBy
 
 @Composable
 fun EventDetailsScreen(
+    modifier: Modifier,
     viewModel: EventDetailsViewModel
 ) {
     val event = remember { viewModel.event }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(20.dp)
             .fillMaxWidth()
     ) {

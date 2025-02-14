@@ -16,6 +16,7 @@ import appcalendar.AppCalendar
 
 @Composable
 fun CalendarScreen(
+    modifier: Modifier,
     viewModel: CalendarViewModel,
     onCalendarDayClicked: (Long) -> Unit,
     onAddEventClick: () -> Unit
@@ -24,7 +25,7 @@ fun CalendarScreen(
     val screenState by viewModel.calendarModel.collectAsState()
 
     Column(
-        modifier = Modifier.padding(horizontal = 10.dp)
+        modifier = modifier.padding(horizontal = 10.dp)
     ) {
 
         Text(

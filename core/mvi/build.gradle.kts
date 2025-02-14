@@ -27,6 +27,8 @@ kotlin {
                 implementation(project.dependencies.platform(libs.compose.bom))
                 implementation(libs.compose.runtime)
                 implementation(libs.compose.ui.ui)
+
+                api(libs.decompose.decompose)
             }
         }
     }

@@ -9,8 +9,8 @@ import com.bumble.appyx.components.backstack.BackStackModel
 import com.bumble.appyx.components.backstack.operation.pop
 import com.bumble.appyx.components.backstack.ui.fader.BackStackFader
 import com.bumble.appyx.navigation.composable.AppyxNavigationContainer
+import com.bumble.appyx.navigation.node.node
 import com.solo4.calendarreminder.calendar.nodes.addevent.AddEventNode
-import com.solo4.calendarreminder.calendar.nodes.calendar.CalendarNode
 import com.solo4.calendarreminder.calendar.nodes.daydetails.DayDetailsNode
 import com.solo4.calendarreminder.calendar.nodes.eventdetails.EventDetailsNode
 import com.solo4.core.calendar.getPlatformCalendar
@@ -46,13 +46,14 @@ class RootNode(
 
     override fun buildChildNode(navTarget: NavTarget, nodeContext: NodeContext): Node<*> {
         return when (navTarget) {
-            is NavTarget.CalendarScreen -> CalendarNode(nodeContext, backStack)
+            //is NavTarget.CalendarScreen -> CalendarNode(nodeContext, backStack)
             is NavTarget.DayDetailsScreen ->
                 DayDetailsNode(nodeContext, backStack, navTarget.dayId)
             is NavTarget.EventDetailsScreen ->
                 EventDetailsNode(nodeContext, backStack, navTarget.event)
             is NavTarget.AddEventScreen ->
                 AddEventNode(nodeContext, backStack, navTarget.concreteDay)
+            else -> node(nodeContext, {})
         }
     }
 

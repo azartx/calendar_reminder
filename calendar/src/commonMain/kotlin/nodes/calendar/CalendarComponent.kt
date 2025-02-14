@@ -3,25 +3,29 @@ package com.solo4.calendarreminder.calendar.nodes.calendar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.arkivanov.decompose.DelicateDecomposeApi
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.push
 import com.solo4.calendarreminder.calendar.data.repository.calendar.CalendarRepository
 import com.solo4.calendarreminder.calendar.nodes.calendar.content.CalendarScreen
 import com.solo4.calendarreminder.calendar.nodes.calendar.content.CalendarViewModel
 import com.solo4.calendarreminder.calendar.nodes.calendar.content.factory.CalendarModelFactory
 import com.solo4.calendarreminder.calendar.nodes.calendar.content.mapper.CalendarItemMapper
-import com.solo4.calendarreminder.calendar.nodes.root.RootComponent
+import com.solo4.calendarreminder.calendar.nodes.root.NavTarget
 import com.solo4.core.calendar.CalendarWrapper
 import com.solo4.core.calendar.getPlatformCalendar
-import com.solo4.core.mvi.decompose.ChildComponent
+import com.solo4.core.mvi.decompose.ViewComponent
 
-class CalendarNode(
-    private val rootComponent: RootComponent,
-) : ChildComponent {
+@OptIn(DelicateDecomposeApi::class)
+class CalendarComponent(
+    override val navigation: StackNavigation<NavTarget>,
+) : ViewComponent<NavTarget> {
 
     private val repository: CalendarRepository = CalendarRepository()
     private val calendar: CalendarWrapper = getPlatformCalendar()
 
     @Composable
-    override fun Content(modifier: Modifier) {
+    fun Content(modifier: Modifier) {
         val viewModel = viewModel<CalendarViewModel> {
             CalendarViewModel(
                 calendarRepository = repository,
@@ -31,12 +35,13 @@ class CalendarNode(
             )
         }
         CalendarScreen(
+            modifier,
             viewModel = viewModel,
             onCalendarDayClicked = { dayId ->
-               // backStack.push(NavTarget.DayDetailsScreen(dayId))
+                navigation.push(NavTarget.DayDetailsScreen(dayId))
             },
             onAddEventClick = {
-                //backStack.push(NavTarget.AddEventScreen(concreteDay = null))
+                navigation.push(NavTarget.AddEventScreen(concreteDay = null))
             }
         )
     }

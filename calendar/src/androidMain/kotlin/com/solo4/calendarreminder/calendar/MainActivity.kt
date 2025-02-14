@@ -4,15 +4,12 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.arkivanov.decompose.defaultComponentContext
-import com.arkivanov.decompose.extensions.compose.stack.Children
-import com.bumble.appyx.navigation.integration.NodeActivity
+import com.arkivanov.decompose.retainedComponent
 import com.solo4.calendarreminder.calendar.nodes.root.RootComponent
 import com.solo4.core.calendar.getPlatformCalendar
 import com.solo4.core.kmputils.MultiplatformContext
@@ -24,7 +21,7 @@ import com.solo4.domain.eventmanager.EventsNotificationManager
 import com.solo4.domain.eventmanager.getEventsNotificationManager
 import kotlinx.coroutines.launch
 
-class MainActivity : NodeActivity() {
+class MainActivity : AppCompatActivity() {
 
     companion object {
         lateinit var permissionHandler: PermissionsHandler
@@ -49,21 +46,14 @@ class MainActivity : NodeActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val rootComponent = RootComponent(defaultComponentContext())
+
+        val rootComponent = retainedComponent { RootComponent(it) }
         permissionHandler = getPermissionHandler(multiplatformContext)
 
         askPermissions()
 
         setContent {
-            MaterialTheme {
-                Children(rootComponent.stack) {
-                    Surface(color = MaterialTheme.colorScheme.background) {
-                        when (val child = it.instance) {
-                            else -> child.Content(Modifier)
-                        }
-                    }
-                }
-            }
+            rootComponent.Content(Modifier)
         }
     }
 

@@ -111,6 +111,14 @@ android {
             useSupportLibrary = true
         }
     }
+
+    buildTypes {
+        debug {
+            isDebuggable = true
+            applicationIdSuffix = ".debug"
+        }
+    }
+
     buildFeatures {
         compose = true
     }

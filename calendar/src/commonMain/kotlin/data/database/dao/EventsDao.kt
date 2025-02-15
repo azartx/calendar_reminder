@@ -1,4 +1,4 @@
-package com.solo4.calendarreminder.data.database.dao
+package com.solo4.calendarreminder.calendar.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -12,15 +12,16 @@ import com.solo4.calendarreminder.data.database.entity.EventEntity
 @Dao
 interface EventsDao {
 
+    @Transaction
     @Query("SELECT * FROM days_table WHERE id = :dayId")
     suspend fun getDayById(dayId: Long): DayEventRelation?
 
     @Transaction
     @Query("SELECT * FROM days_table WHERE id = :id")
-    fun getDayEventsById(id: Long): List<DayEventRelation>
+    suspend fun getDayEventsById(id: Long): List<DayEventRelation>
 
     @Query("SELECT * FROM days_table")
-    fun getAll(): List<DayEntity>
+    suspend fun getAll(): List<DayEntity>
 
     @Query("SELECT EXISTS(SELECT * FROM days_table WHERE id = :dayId)")
     suspend fun isDayExists(dayId: Long): Boolean

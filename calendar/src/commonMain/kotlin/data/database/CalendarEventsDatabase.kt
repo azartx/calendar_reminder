@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import com.solo4.calendarreminder.data.database.dao.EventsDao
+import com.solo4.calendarreminder.calendar.data.database.dao.EventsDao
 import com.solo4.calendarreminder.data.database.entity.DayEntity
 import com.solo4.calendarreminder.data.database.entity.EventEntity
 import kotlinx.coroutines.Dispatchers

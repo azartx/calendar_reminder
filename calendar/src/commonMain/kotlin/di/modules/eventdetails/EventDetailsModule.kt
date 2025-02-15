@@ -1,7 +1,7 @@
 package com.solo4.calendarreminder.calendar.di.modules.eventdetails
 
-import com.solo4.calendarreminder.calendar.nodes.daydetails.DayDetailsComponent
-import com.solo4.calendarreminder.calendar.nodes.eventdetails.content.EventDetailsViewModel
+import com.solo4.calendarreminder.calendar.presentation.daydetails.DayDetailsComponent
+import com.solo4.calendarreminder.calendar.presentation.eventdetails.content.EventDetailsViewModel
 import org.koin.dsl.module
 
 val eventDetailsModule = module {

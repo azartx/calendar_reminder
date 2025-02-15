@@ -10,7 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.arkivanov.decompose.retainedComponent
-import com.solo4.calendarreminder.calendar.nodes.root.RootComponent
+import com.solo4.calendarreminder.calendar.presentation.root.RootComponent
 import com.solo4.core.calendar.getPlatformCalendar
 import com.solo4.core.kmputils.MultiplatformContext
 import com.solo4.core.permissions.ExactAlarm

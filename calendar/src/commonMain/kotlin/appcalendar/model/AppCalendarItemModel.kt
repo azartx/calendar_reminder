@@ -1,6 +1,6 @@
 package appcalendar.model
 
-import com.solo4.calendarreminder.calendar.nodes.calendar.content.utils.getFormattedDateId
+import com.solo4.calendarreminder.calendar.presentation.calendar.content.utils.getFormattedDateId
 
 data class AppCalendarItemModel(
     val day: Int,

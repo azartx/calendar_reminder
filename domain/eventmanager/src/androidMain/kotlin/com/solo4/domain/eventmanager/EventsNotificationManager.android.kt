@@ -12,6 +12,8 @@ import com.solo4.core.kmputils.MultiplatformContext
 import com.solo4.domain.eventmanager.mapper.CalendarEventMapper
 import com.solo4.domain.eventmanager.model.Event
 
+private const val TAG = "AndroidEventNotificationManager"
+
 actual fun getEventsNotificationManager(
     context: MultiplatformContext,
     calendar: CalendarWrapper
@@ -39,8 +41,14 @@ internal class AndroidEventsNotificationManager(
         scheduleBeforeMillis: Long /*if (BuildConfig.DEBUG)
             Millis.SECONDS_15.millis else Millis.MINUTES_15.millis*/ // todo debug settings
     ) {
-        if (!isFeatureEvent(event, scheduleBeforeMillis)) return
-        if (!canScheduleEvent()) return
+        if (!isFeatureEvent(event, scheduleBeforeMillis)) {
+            Log.w(TAG, "Old event can't be posted for notifying")
+            return
+        }
+        if (!canScheduleEvent()) {
+            Log.e(TAG, "Alarm manager can't schedule the event")
+            return
+        }
 
         val intent = Intent(_context, CalendarNotificationsBroadcastReceiver::class.java)
         intent.putExtra(Event::class.simpleName, mapper.map(event))
@@ -59,7 +67,7 @@ internal class AndroidEventsNotificationManager(
                 pendingIntent
             )
         } catch (e: SecurityException) {
-            Log.e(this::class.simpleName, "Alarm manager is not allowed.", e)
+            Log.e(TAG, "Alarm manager is not allowed.", e)
         }
     }
 

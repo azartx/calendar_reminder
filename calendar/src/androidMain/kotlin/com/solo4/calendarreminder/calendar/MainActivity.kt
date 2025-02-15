@@ -27,7 +27,8 @@ class MainActivity : ComponentActivity() {
         lateinit var permissionHandler: PermissionsHandler
     }
 
-    private val multiplatformContext = object : MultiplatformContext {
+    // used in permission handler
+    private val activityContext = object : MultiplatformContext {
         private var _internal: MainActivity? = null
         override fun getContext() = _internal
         override fun setContext(context: Any?) {
@@ -40,7 +41,7 @@ class MainActivity : ComponentActivity() {
     }.apply { setContext(this@MainActivity) }
 
     private val eventNotificationManager: EventsNotificationManager = getEventsNotificationManager(
-        multiplatformContext,
+        App.multiplatformContext,
         getPlatformCalendar()
     )
 
@@ -48,7 +49,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val rootComponent = retainedComponent { RootComponent(it) }
-        permissionHandler = getPermissionHandler(multiplatformContext)
+        permissionHandler = getPermissionHandler(activityContext)
 
         askPermissions()
 

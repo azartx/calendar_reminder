@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.solo4.calendarreminder.calendar.App
 
 actual fun CalendarEventsDatabase.Creator.builder(): RoomDatabase.Builder<CalendarEventsDatabase> {
-    val appContext = App.app.applicationContext
+    val appContext = App.multiplatformContext.getContext() as App
     val dbFile = appContext.getDatabasePath("calendar_reminder.db")
     return Room.databaseBuilder<CalendarEventsDatabase>(
         context = appContext,

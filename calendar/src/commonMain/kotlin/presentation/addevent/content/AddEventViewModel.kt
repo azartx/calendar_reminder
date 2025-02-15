@@ -19,6 +19,7 @@ import com.solo4.core.calendar.CalendarWrapper
 import com.solo4.core.calendar.model.CalendarEvent
 import com.solo4.core.calendar.model.Millis
 import com.solo4.core.mvi.decompose.ViewModel
+import com.solo4.domain.eventmanager.EventsNotificationManager
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
 class AddEventViewModel(
     private val addEventRepository: AddEventRepository,
     private val calendar: CalendarWrapper,
+    private val eventsNotificationManager: EventsNotificationManager,
     private val concreteDay: Long?
 ) : ViewModel(),
     ScreenStateDelegate<AddEventScreenState, AddEventErrorState, AddEventScreenEvent> by AddEventScreenStateDelegate(
@@ -127,11 +129,10 @@ class AddEventViewModel(
             )
             addEventRepository.saveEvent(event)
 
-            // TODO post event to notification manager
-            /*App.eventsNotificationManager.scheduleCalendarEvent(
+            eventsNotificationManager.scheduleEvent(
                 event,
                 data.selectedScheduleBeforeMillis.millis
-            )*/
+            )
 
             _navigationState.emit(Unit)
         }

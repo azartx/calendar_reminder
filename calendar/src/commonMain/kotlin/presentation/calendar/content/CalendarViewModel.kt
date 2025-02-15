@@ -24,7 +24,7 @@ class CalendarViewModel(
     )
     val calendarModel = _calendarModel.asStateFlow()
 
-    init {
+    fun loadScreenData() {
         viewModelScope.launch {
             updateDaysEventsState()
         }

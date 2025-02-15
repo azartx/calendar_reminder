@@ -16,6 +16,6 @@ val addEventModule = module {
         // domain
 
         // presentation
-        scoped { params -> AddEventViewModel(get(), get(), params.get<AddEventDayParam>().dayId) }
+        scoped { params -> AddEventViewModel(get(), get(), get(), params.get<AddEventDayParam>().dayId) }
     }
 }

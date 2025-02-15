@@ -43,7 +43,7 @@ internal class AndroidEventsNotificationManager(
         if (!canScheduleEvent()) return
 
         val intent = Intent(_context, CalendarNotificationsBroadcastReceiver::class.java)
-        intent.putExtra(Event::class.java.name, mapper.map(event))
+        intent.putExtra(Event::class.simpleName, mapper.map(event))
 
         val pendingIntent = PendingIntent.getBroadcast(
             _context,
@@ -59,7 +59,7 @@ internal class AndroidEventsNotificationManager(
                 pendingIntent
             )
         } catch (e: SecurityException) {
-            Log.e(this::class.java.name, "Alarm manager is not allowed.", e)
+            Log.e(this::class.simpleName, "Alarm manager is not allowed.", e)
         }
     }
 

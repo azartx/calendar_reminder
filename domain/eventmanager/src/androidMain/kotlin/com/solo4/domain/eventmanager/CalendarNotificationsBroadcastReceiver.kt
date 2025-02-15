@@ -18,9 +18,9 @@ class CalendarNotificationsBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         val mapper by lazy { CalendarEventMapper() }
         val event = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent?.getParcelableExtra(CalendarEvent::class.java.name, Event::class.java)
+            intent?.getParcelableExtra(CalendarEvent::class.simpleName, Event::class.java)
         } else {
-            intent?.getParcelableExtra(CalendarEvent::class.java.name)
+            intent?.getParcelableExtra(CalendarEvent::class.simpleName)
         }
             ?.let(mapper::map)
             ?: return

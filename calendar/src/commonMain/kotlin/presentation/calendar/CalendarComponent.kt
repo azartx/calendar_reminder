@@ -1,6 +1,7 @@
 package com.solo4.calendarreminder.calendar.presentation.calendar
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.DelicateDecomposeApi
@@ -32,6 +33,7 @@ class CalendarComponent(
     fun Content(modifier: Modifier) {
         CalendarScreen(
             modifier,
+            lifecycle = remember { componentContext.lifecycle},
             viewModel = viewModel,
             onCalendarDayClicked = { dayId ->
                 navigation.push(NavTarget.DayDetailsScreen(dayId))

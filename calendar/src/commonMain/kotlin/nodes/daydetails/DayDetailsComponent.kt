@@ -2,37 +2,39 @@ package com.solo4.calendarreminder.calendar.nodes.daydetails
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.push
-import com.solo4.calendarreminder.calendar.data.repository.calendar.CalendarRepository
 import com.solo4.calendarreminder.calendar.nodes.daydetails.content.DayDetailsScreen
 import com.solo4.calendarreminder.calendar.nodes.daydetails.content.DayDetailsViewModel
+import com.solo4.calendarreminder.calendar.nodes.daydetails.content.model.DayIdParam
 import com.solo4.calendarreminder.calendar.nodes.root.NavTarget
-import com.solo4.core.calendar.getPlatformCalendar
+import com.solo4.core.mvi.componentScope
+import com.solo4.core.mvi.decompose.DefaultLifecycleListener
+import com.solo4.core.mvi.decompose.LifecycleListener
 import com.solo4.core.mvi.decompose.ViewComponent
-import org.koin.core.component.get
+import com.solo4.core.mvi.decompose.viewModel
+import org.koin.core.parameter.parametersOf
+import org.koin.core.scope.Scope
 
 class DayDetailsComponent(
     override val componentContext: ComponentContext,
     override val navigation: StackNavigation<NavTarget>,
     private val dayId: Long
-) : ViewComponent<NavTarget> {
+) : ViewComponent<NavTarget>,
+    ComponentContext by componentContext,
+    LifecycleListener by DefaultLifecycleListener(componentContext.lifecycle) {
 
-    private val repository = CalendarRepository(get(), get())
+    override val scope: Scope by componentScope()
+
+    private val viewModel = viewModel<DayDetailsViewModel, DayDetailsComponent> {
+        parametersOf(DayIdParam(dayId))
+    }
 
     @OptIn(DelicateDecomposeApi::class)
     @Composable
     fun Content(modifier: Modifier) {
-        val viewModel = viewModel<DayDetailsViewModel>(key = this.toString()) {
-            DayDetailsViewModel(
-                repository = repository,
-                calendar = getPlatformCalendar(),
-                dayId = dayId
-            )
-        }
         DayDetailsScreen(
             modifier,
             viewModel = viewModel,
@@ -44,5 +46,9 @@ class DayDetailsComponent(
                 navigation.push(NavTarget.AddEventScreen(it))
             }
         )
+    }
+
+    override fun onDestroy() {
+        closeScope()
     }
 }

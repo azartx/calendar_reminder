@@ -3,8 +3,6 @@ package com.solo4.calendarreminder.calendar.nodes.addevent.content
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePickerState
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.solo4.calendarreminder.calendar.data.repository.addevent.AddEventRepository
 import com.solo4.calendarreminder.calendar.nodes.addevent.content.state.AddEventErrorState
 import com.solo4.calendarreminder.calendar.nodes.addevent.content.state.AddEventScreenEvent
@@ -16,13 +14,11 @@ import com.solo4.calendarreminder.calendar.nodes.calendar.content.utils.getForma
 import com.solo4.calendarreminder.calendar.nodes.calendar.content.utils.removeTimezoneOffset
 import com.solo4.calendarreminder.calendar.nodes.calendar.content.utils.toDateByPattern
 import com.solo4.calendarreminder.calendar.utils.getDefaultLocale
-import com.solo4.calendarreminder.data.database.CalendarEventsDatabase
-import com.solo4.calendarreminder.data.mapper.CalendarEventMapper
 import com.solo4.core.mvi.screenstate.ScreenStateDelegate
 import com.solo4.core.calendar.CalendarWrapper
-import com.solo4.core.calendar.getPlatformCalendar
 import com.solo4.core.calendar.model.CalendarEvent
 import com.solo4.core.calendar.model.Millis
+import com.solo4.core.mvi.decompose.ViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -31,11 +27,8 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 class AddEventViewModel(
-    private val addEventRepository: AddEventRepository = AddEventRepository(
-        eventsDao = CalendarEventsDatabase.InstanceHolder.instance.eventsDao,
-        calendarEventMapper = CalendarEventMapper()
-    ),
-    private val calendar: CalendarWrapper = getPlatformCalendar(),
+    private val addEventRepository: AddEventRepository,
+    private val calendar: CalendarWrapper,
     private val concreteDay: Long?
 ) : ViewModel(),
     ScreenStateDelegate<AddEventScreenState, AddEventErrorState, AddEventScreenEvent> by AddEventScreenStateDelegate(

@@ -10,19 +10,24 @@ import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.solo4.calendarreminder.calendar.nodes.calendar.content.CalendarScreen
 import com.solo4.calendarreminder.calendar.nodes.calendar.content.CalendarViewModel
 import com.solo4.calendarreminder.calendar.nodes.root.NavTarget
+import com.solo4.core.mvi.componentScope
+import com.solo4.core.mvi.decompose.DefaultLifecycleListener
+import com.solo4.core.mvi.decompose.LifecycleListener
 import com.solo4.core.mvi.decompose.ViewComponent
-import org.koin.core.component.get
+import com.solo4.core.mvi.decompose.viewModel
+import org.koin.core.scope.Scope
 
 @OptIn(DelicateDecomposeApi::class)
 class CalendarComponent(
     override val componentContext: ComponentContext,
     override val navigation: StackNavigation<NavTarget>,
 ) : ViewComponent<NavTarget>,
-    ComponentContext by componentContext {
+    ComponentContext by componentContext,
+    LifecycleListener by DefaultLifecycleListener(componentContext.lifecycle) {
 
-    private val viewModel = componentContext.instanceKeeper.getOrCreate {
-        get<CalendarViewModel>()
-    }
+    override val scope: Scope by componentScope()
+
+    private val viewModel = viewModel<CalendarViewModel, CalendarComponent>()
 
     @Composable
     fun Content(modifier: Modifier) {
@@ -36,5 +41,9 @@ class CalendarComponent(
                 navigation.push(NavTarget.AddEventScreen(concreteDay = null))
             }
         )
+    }
+
+    override fun onDestroy() {
+        closeScope()
     }
 }

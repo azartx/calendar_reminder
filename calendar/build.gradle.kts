@@ -42,15 +42,15 @@ kotlin {
                 implementation(libs.decompose.decompose)
                 implementation(libs.decompose.extensionsCompose)
 
+                // projects
                 implementation(projects.core.calendar)
                 implementation(projects.core.mvi)
                 implementation(projects.core.permissions)
                 implementation(projects.core.kmputils)
                 implementation(projects.domain.eventmanager)
+                // *********
 
                 implementation(libs.kotlinx.datetime)
-
-                implementation(libs.androidx.viewmodel)
 
                 implementation(libs.androidx.room.roomRuntime)
                 implementation(libs.sqlite.bundled)
@@ -68,17 +68,8 @@ kotlin {
                 implementation(libs.androidx.activity.compose)
 
                 // lifecycle
-                implementation(libs.androidx.lifecycle.lifecycleViewModelKtx)
-                implementation(libs.androidx.lifecycle.lifecycleViewModelCompose)
                 implementation(libs.androidx.lifecycle.lifecycleRuntimeCompose)
                 implementation(libs.androidx.lifecycle.lifecycleRuntimeKtx)
-
-                // compose
-                implementation(project.dependencies.platform(libs.compose.bom))
-                implementation(libs.compose.ui.ui)
-                implementation(libs.compose.ui.uiGraphics)
-                implementation(libs.compose.ui.tooling.preview)
-                implementation(libs.compose.material3)
 
                 implementation(libs.koin.android)
             }
@@ -134,12 +125,6 @@ android {
 }
 
 dependencies {
-   /* implementation(projects.core.permissions)
-    implementation(projects.core.mvi)
-    implementation(projects.core.kmputils)
-    implementation(projects.core.calendar)
-    implementation(projects.domain.eventmanager)*/
-
     // room compiler plugin dependencies
     add("kspAndroid", libs.androidx.room.roomCompiler)
     add("kspIosSimulatorArm64", libs.androidx.room.roomCompiler)

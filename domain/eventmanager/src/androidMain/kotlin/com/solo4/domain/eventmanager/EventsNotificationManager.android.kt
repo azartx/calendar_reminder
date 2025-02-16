@@ -38,8 +38,7 @@ internal class AndroidEventsNotificationManager(
 
     override fun scheduleEvent(
         event: CalendarEvent,
-        scheduleBeforeMillis: Long /*if (BuildConfig.DEBUG)
-            Millis.SECONDS_15.millis else Millis.MINUTES_15.millis*/ // todo debug settings
+        scheduleBeforeMillis: Long
     ) {
         if (!isFeatureEvent(event, scheduleBeforeMillis)) {
             Log.w(TAG, "Old event can't be posted for notifying")

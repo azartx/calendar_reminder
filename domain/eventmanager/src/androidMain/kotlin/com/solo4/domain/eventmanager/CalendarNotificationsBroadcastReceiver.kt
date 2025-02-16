@@ -7,7 +7,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import com.solo4.core.calendar.model.CalendarEvent
+import android.util.Log
 import com.solo4.domain.eventmanager.mapper.CalendarEventMapper
 import com.solo4.domain.eventmanager.model.Event
 
@@ -18,12 +18,18 @@ class CalendarNotificationsBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         val mapper by lazy { CalendarEventMapper() }
         val event = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent?.getParcelableExtra(CalendarEvent::class.simpleName, Event::class.java)
+            intent?.getParcelableExtra(Event::class.simpleName, Event::class.java)
         } else {
-            intent?.getParcelableExtra(CalendarEvent::class.simpleName)
+            intent?.getParcelableExtra(Event::class.simpleName)
         }
             ?.let(mapper::map)
-            ?: return
+            ?: apply {
+                Log.e(
+                    "CalendarNotificationsBroadcastReceiver",
+                    "Calendar event for notification is null"
+                )
+                return
+            }
 
         context?.apply {
             val nm = getSystemService(NotificationManager::class.java)

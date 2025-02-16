@@ -23,13 +23,14 @@ class CalendarNotificationsBroadcastReceiver : BroadcastReceiver() {
             intent?.getParcelableExtra(Event::class.simpleName)
         }
             ?.let(mapper::map)
-            ?: apply {
-                Log.e(
-                    "CalendarNotificationsBroadcastReceiver",
-                    "Calendar event for notification is null"
-                )
-                return
-            }
+
+        if (event == null) {
+            Log.e(
+                "CalendarNotificationsBroadcastReceiver",
+                "Calendar event for notification is null"
+            )
+            return
+        }
 
         context?.apply {
             val nm = getSystemService(NotificationManager::class.java)

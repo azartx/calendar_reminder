@@ -1,11 +1,15 @@
 package com.solo4.calendarreminder.calendar.presentation.daydetails
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.essenty.lifecycle.doOnResume
 import com.solo4.calendarreminder.calendar.presentation.daydetails.content.DayDetailsScreen
 import com.solo4.calendarreminder.calendar.presentation.daydetails.content.DayDetailsViewModel
 import com.solo4.calendarreminder.calendar.presentation.daydetails.content.model.DayIdParam
@@ -35,9 +39,17 @@ class DayDetailsComponent(
     @OptIn(DelicateDecomposeApi::class)
     @Composable
     fun Content(modifier: Modifier) {
+        LaunchedEffect("") {
+            componentContext.lifecycle.doOnResume {
+                viewModel.loadDayEvents()
+            }
+        }
+        val screenState by viewModel.screenState.collectAsState()
         DayDetailsScreen(
             modifier,
-            viewModel = viewModel,
+            screenState = screenState,
+            currentDate = viewModel.currentDate,
+            dayId = viewModel.dayId,
             onEventDetailsClick = {
                 navigation.push(NavTarget.EventDetailsScreen(it))
 

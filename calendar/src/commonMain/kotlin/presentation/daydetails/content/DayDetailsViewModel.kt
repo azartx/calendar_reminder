@@ -24,13 +24,9 @@ class DayDetailsViewModel(
     val currentDate = calendar.formatDateIdToDayMillis(dayId)
         .toDateByPattern(DATE_PATTERN)
 
-    init {
+    fun loadDayEvents() {
         viewModelScope.launch {
-            loadDayEvents()
+            _screenState.emit(DayDetailsScreenState.Content(repository.getMonthEvents(dayId)))
         }
-    }
-
-    private suspend fun loadDayEvents() {
-        _screenState.emit(DayDetailsScreenState.Content(repository.getMonthEvents(dayId)))
     }
 }

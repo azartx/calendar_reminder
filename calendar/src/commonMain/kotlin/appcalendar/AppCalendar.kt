@@ -1,6 +1,7 @@
 package appcalendar
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -16,19 +18,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import appcalendar.model.AppCalendarItemModel
 import appcalendar.model.AppCalendarModel
+import com.solo4.calendarreminder.calendar.presentation.calendar.content.model.HorizontalSwipeDirection
 
 @Composable
 fun AppCalendar(
     model: AppCalendarModel,
-    modifier: Modifier = Modifier,
-    onHorizontalSwipe: (Boolean) -> Unit,
+    modifier: Modifier,
+    onHorizontalSwipe: (HorizontalSwipeDirection) -> Unit,
     onItemClick: (AppCalendarItemModel) -> Unit
 ) {
     var draggingPosition by remember { mutableFloatStateOf(0f) }
@@ -36,7 +38,9 @@ fun AppCalendar(
         modifier = modifier.pointerInput("") {
             this.detectHorizontalDragGestures(
                 onDragEnd = {
-                    onHorizontalSwipe.invoke(draggingPosition > 0)
+                    onHorizontalSwipe.invoke(
+                        if (draggingPosition > 0) HorizontalSwipeDirection.RIGHT else HorizontalSwipeDirection.LEFT
+                    )
                 },
                 onHorizontalDrag = { _, dragAmount ->
                     draggingPosition = dragAmount
@@ -45,38 +49,34 @@ fun AppCalendar(
         }
     ) {
         model.rows.forEach { rowData ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp)
-            ) {
+            Row(modifier = Modifier.fillMaxWidth()) {
                 rowData.rowItems.forEach { rowItem ->
                     Box(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.defaultMinSize(48.dp).weight(1f),
                         contentAlignment = Alignment.Center
                     ) {
-                        if (
-                            rowItem.year == model.yearNow &&
+                        val isItemSelected = rowItem.year == model.yearNow &&
                             rowItem.month == model.monthNow &&
                             rowItem.day == model.dayNow
+                        Canvas(
+                            modifier = Modifier
+                                .padding(4.dp)
+                                .size(48.dp)
+                                .clickable(onClick = { onItemClick.invoke(rowItem) })
                         ) {
-                            Canvas(modifier = Modifier.size(48.dp)) {
-                                drawRoundRect(
-                                    color = Color.Blue,
-                                    cornerRadius = CornerRadius(100f, 100f)
-                                )
-                            }
+                            drawRoundRect(
+                                color = if (isItemSelected)
+                                    Color.Black.copy(alpha = 0.3f) else Color.Black.copy(alpha = 0.1f),
+                                cornerRadius = CornerRadius(30f, 30f)
+                            )
                         }
-                        Notifier(
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .alpha(if (rowItem.hasEvents) 1f else 0f)
-                        )
-                        AppCalendarBlock(
-                            modifier = Modifier
-                                .defaultMinSize(minHeight = 48.dp),
-                            model = rowItem,
-                            onItemClicked = onItemClick
+                        if (rowItem.hasEvents) {
+                            Notifier(modifier = Modifier.padding(top = 3.dp, end = 3.dp).align(Alignment.TopEnd))
+                        }
+                        Text(
+                            modifier = Modifier.align(Alignment.Center),
+                            maxLines = 1,
+                            text = rowItem.day.toString()
                         )
                     }
                 }

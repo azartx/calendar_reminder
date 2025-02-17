@@ -4,6 +4,7 @@ import com.solo4.core.calendar.CalendarWrapper
 import com.solo4.calendarreminder.calendar.data.repository.calendar.CalendarRepository
 import com.solo4.calendarreminder.calendar.presentation.calendar.content.factory.CalendarModelFactory
 import com.solo4.calendarreminder.calendar.presentation.calendar.content.mapper.CalendarItemMapper
+import com.solo4.calendarreminder.calendar.presentation.calendar.content.model.HorizontalSwipeDirection
 import com.solo4.core.mvi.decompose.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,9 +38,10 @@ class CalendarViewModel(
         _calendarModel.emit(updatedItems)
     }
 
-    fun onCalendarSwiped(rightSwipe: Boolean) {
+    fun onCalendarSwiped(swipeDirection: HorizontalSwipeDirection) {
         viewModelScope.launch {
-            if (rightSwipe) loadPreviousCalendar() else loadNextCalendar()
+            if (swipeDirection == HorizontalSwipeDirection.LEFT)
+                loadPreviousCalendar() else loadNextCalendar()
 
             updateDaysEventsState()
         }

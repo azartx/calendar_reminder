@@ -1,12 +1,15 @@
 package com.solo4.calendarreminder.calendar.presentation.calendar
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.essenty.lifecycle.doOnResume
 import com.solo4.calendarreminder.calendar.presentation.calendar.content.CalendarScreen
 import com.solo4.calendarreminder.calendar.presentation.calendar.content.CalendarViewModel
 import com.solo4.calendarreminder.calendar.presentation.root.NavTarget
@@ -31,16 +34,22 @@ class CalendarComponent(
 
     @Composable
     fun Content(modifier: Modifier) {
+        LaunchedEffect("") {
+            lifecycle.doOnResume {
+                viewModel.loadScreenData()
+            }
+        }
+        val screenState by viewModel.calendarModel.collectAsState()
         CalendarScreen(
             modifier,
-            lifecycle = remember { componentContext.lifecycle},
-            viewModel = viewModel,
+            calendarState = screenState,
             onCalendarDayClicked = { dayId ->
                 navigation.push(NavTarget.DayDetailsScreen(dayId))
             },
             onAddEventClick = {
                 navigation.push(NavTarget.AddEventScreen(concreteDay = null))
-            }
+            },
+            onCalendarHorizontalSwipe = viewModel::onCalendarSwiped
         )
     }
 

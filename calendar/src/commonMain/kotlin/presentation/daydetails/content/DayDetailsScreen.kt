@@ -95,6 +95,7 @@ fun DayDetailsScreen(
         )
         Button(
             modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
             onClick = { onAddEventClick.invoke(dayId) }
         ) {
             Text(text = stringResource(Res.string.screen_calendar_button_add_event_label))

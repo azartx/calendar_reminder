@@ -1,9 +1,11 @@
 package com.solo4.calendarreminder.calendar.presentation.eventdetails
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.pop
 import com.solo4.calendarreminder.calendar.presentation.eventdetails.content.EventDetailsScreen
 import com.solo4.calendarreminder.calendar.presentation.eventdetails.content.EventDetailsViewModel
 import com.solo4.calendarreminder.calendar.presentation.root.NavTarget
@@ -32,7 +34,11 @@ class EventDetailsComponent(
 
     @Composable
     fun Content(modifier: Modifier) {
-        EventDetailsScreen(modifier, viewModel)
+        EventDetailsScreen(
+            modifier,
+            remember { viewModel.event },
+            navigation::pop
+        )
     }
 
     override fun onDestroy() {

@@ -45,6 +45,7 @@ kotlin {
                 // projects
                 implementation(projects.core.calendar)
                 implementation(projects.core.mvi)
+                implementation(projects.core.uiComponents)
                 implementation(projects.core.permissions)
                 implementation(projects.core.kmputils)
                 implementation(projects.domain.eventmanager)

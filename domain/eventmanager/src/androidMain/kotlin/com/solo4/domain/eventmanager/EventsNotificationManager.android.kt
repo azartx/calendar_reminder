@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import com.solo4.core.calendar.CalendarWrapper
 import com.solo4.core.calendar.model.CalendarEvent
 import com.solo4.core.kmputils.MultiplatformContext
@@ -46,6 +47,7 @@ internal class AndroidEventsNotificationManager(
         }
         if (!canScheduleEvent()) {
             Log.e(TAG, "Alarm manager can't schedule the event")
+            Toast.makeText(_context, "canScheduleEvent == false", Toast.LENGTH_LONG).show()
             return
         }
 
@@ -54,9 +56,9 @@ internal class AndroidEventsNotificationManager(
 
         val pendingIntent = PendingIntent.getBroadcast(
             _context,
-            0,
+            (0..1000).random(),
             intent,
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         try {

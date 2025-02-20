@@ -37,7 +37,8 @@ class EventDetailsComponent(
         EventDetailsScreen(
             modifier,
             remember { viewModel.event },
-            navigation::pop
+            navigation::pop,
+            viewModel::removeEvent
         )
     }
 

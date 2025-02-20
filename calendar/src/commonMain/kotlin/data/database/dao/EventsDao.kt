@@ -38,6 +38,9 @@ interface EventsDao {
     @Insert(entity = EventEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun setEvents(eventEntity: List<EventEntity>)
 
+    @Query("DELETE FROM events_table WHERE id = :eventId")
+    suspend fun removeEventById(eventId: Int)
+
     @Transaction
     suspend fun setDayEvent(dayEvent: DayEventRelation) {
         if (!isDayExists(dayEvent.day.yearMonthDaySum)) {

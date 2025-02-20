@@ -12,51 +12,52 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.solo4.calendarreminder.calendar.presentation.addevent.content.state.AddEventErrorState
+import com.solo4.calendarreminder.calendar.presentation.addevent.content.state.AddEventScreenState
 import com.solo4.calendarreminder.shared.calendar.generated.resources.Res
 import com.solo4.calendarreminder.shared.calendar.generated.resources.ic_clock
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import com.solo4.core.calendar.model.Millis
+import com.solo4.core.uicomponents.Toolbar
 import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEventScreen(
     modifier: Modifier,
-    viewModel: AddEventViewModel,
+    screenState: AddEventScreenState,
+    errorState: AddEventErrorState,
+    datePickerState: DatePickerState,
+    timePickerState: TimePickerState,
+    scheduleBeforeMillis: List<Millis>,
+    onDismissDatePickerClick: () -> Unit,
+    onDismissTimePickerClick: () -> Unit,
+    onSchedulingFilterChipClicked: (Millis) -> Unit,
+    onTitleTextFieldChanged: (String) -> Unit,
+    onDescriptionTextFieldChanged: (String) -> Unit,
+    onDatePickerButtonPressed: () -> Unit,
+    onSubmitButtonClicked: () -> Unit,
     onBackPressed: () -> Unit,
 ) {
-    val screenState by viewModel.screenState.collectAsState()
-    val errorState by viewModel.errorDelegate.errorState.collectAsState()
-    val datePickerState by viewModel.datePickerState.collectAsState()
-    val timePickerState by viewModel.timePickerState.collectAsState()
-    val scope = rememberCoroutineScope()
-
-    DisposableEffect(key1 = "") {
-        val job = scope.launch {
-            viewModel.navigationState.collectLatest { onBackPressed.invoke() }
-        }
-
-        onDispose { job.cancel() }
-    }
-
     Column(modifier = modifier) {
+        Toolbar(
+            title = "Create new event",
+            onBackPressed = onBackPressed
+        )
         if (screenState.isDatePickerVisible) {
             DatePickerDialog(
-                onDismissRequest = viewModel::onDismissDatePickerClicked,
+                onDismissRequest = onDismissDatePickerClick,
                 confirmButton = {},
             ) {
                 DatePicker(
@@ -68,7 +69,7 @@ fun AddEventScreen(
 
         if (screenState.isTimePickerVisible) {
             DatePickerDialog(
-                onDismissRequest = viewModel::onTimePickerDismissed,
+                onDismissRequest = onDismissTimePickerClick,
                 confirmButton = {},
             ) {
                 TimePicker(
@@ -89,10 +90,10 @@ fun AddEventScreen(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    viewModel.scheduleBeforeMillis.forEach { millis ->
+                    scheduleBeforeMillis.forEach { millis ->
                         FilterChip(
                             selected = screenState.selectedScheduleBeforeMillis == millis,
-                            onClick = { viewModel.onSchedulingFilterChipClicked(millis) },
+                            onClick = { onSchedulingFilterChipClicked.invoke(millis) },
                             label = { Text(text = millis.toMinutes().toString()) }
                         )
                     }
@@ -100,14 +101,12 @@ fun AddEventScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
-
         TextField(
             modifier = Modifier.fillMaxWidth(),
             value = screenState.title,
             placeholder = { Text(text = "Title") },
             isError = errorState.isTitleValid,
-            onValueChange = viewModel::onTitleTextFieldChanged
+            onValueChange = onTitleTextFieldChanged
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -119,7 +118,7 @@ fun AddEventScreen(
             value = screenState.description,
             placeholder = { Text(text = "Description") },
             isError = errorState.isDescriptionValid,
-            onValueChange = viewModel::onDescriptionTextFieldChanged
+            onValueChange = onDescriptionTextFieldChanged
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -132,7 +131,7 @@ fun AddEventScreen(
             trailingIcon = {
                 Icon(
                     modifier = Modifier.clickable(
-                        onClick = viewModel::onDatePickerButtonPressed
+                        onClick = onDatePickerButtonPressed
                     ),
                     painter = painterResource(resource = Res.drawable.ic_clock),
                     contentDescription = null
@@ -145,7 +144,7 @@ fun AddEventScreen(
                 .fillMaxWidth()
                 .padding(vertical = 20.dp),
             shape = RoundedCornerShape(8.dp),
-            onClick = viewModel::onSubmitButtonClicked
+            onClick = onSubmitButtonClicked
         ) {
             Text(
                 modifier = Modifier.padding(10.dp),

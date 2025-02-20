@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.essenty.lifecycle.doOnResume
 import com.solo4.calendarreminder.calendar.presentation.daydetails.content.DayDetailsScreen
@@ -56,7 +57,8 @@ class DayDetailsComponent(
             },
             onAddEventClick = {
                 navigation.push(NavTarget.AddEventScreen(it))
-            }
+            },
+            onBackPressed = navigation::pop
         )
     }
 

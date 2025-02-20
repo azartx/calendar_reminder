@@ -27,6 +27,7 @@ import com.solo4.calendarreminder.calendar.presentation.daydetails.content.state
 import com.solo4.calendarreminder.shared.calendar.generated.resources.Res
 import com.solo4.calendarreminder.shared.calendar.generated.resources.screen_calendar_button_add_event_label
 import com.solo4.core.calendar.model.CalendarEvent
+import com.solo4.core.uicomponents.Toolbar
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -36,7 +37,8 @@ fun DayDetailsScreen(
     currentDate: String,
     dayId: Long,
     onEventDetailsClick: (event: CalendarEvent) -> Unit,
-    onAddEventClick: (dayId: Long) -> Unit
+    onAddEventClick: (dayId: Long) -> Unit,
+    onBackPressed: (() -> Unit)
 ) {
     Column(
         modifier = modifier
@@ -44,10 +46,9 @@ fun DayDetailsScreen(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            modifier = Modifier.padding(vertical = 20.dp),
-            text = currentDate,
-            fontSize = 20.sp
+        Toolbar(
+            title = currentDate,
+            onBackPressed = onBackPressed
         )
 
         if (screenState is DayDetailsScreenState.Loading) {

@@ -10,9 +10,18 @@ class EventDetailsViewModel(
     private val eventDetailsRepository: EventDetailsRepository,
 ) : ViewModel() {
 
+    private var onBackListener = {}
+
+    // TODO change to mvi
+    fun registerOnBackEvent(callback: () -> Unit) {
+        onBackListener = callback
+    }
+
     fun removeEvent() {
         viewModelScope.launch {
             eventDetailsRepository.removeEvent(event.eventId)
+            onBackListener.invoke()
+            onBackListener = {}
         }
     }
 }

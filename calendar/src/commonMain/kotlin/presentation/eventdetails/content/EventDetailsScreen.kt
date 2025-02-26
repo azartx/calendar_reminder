@@ -9,6 +9,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -16,6 +20,7 @@ import com.solo4.calendarreminder.calendar.presentation.calendar.content.utils.t
 import com.solo4.calendarreminder.shared.calendar.generated.resources.Res
 import com.solo4.calendarreminder.shared.calendar.generated.resources.ic_delete
 import com.solo4.core.calendar.model.CalendarEvent
+import com.solo4.core.uicomponents.Dialog
 import com.solo4.core.uicomponents.Toolbar
 import org.jetbrains.compose.resources.painterResource
 
@@ -26,12 +31,23 @@ fun EventDetailsScreen(
     onBackPressed: () -> Unit,
     onRemoveEventClick: () -> Unit,
 ) {
+    var isDialogVisible by remember { mutableStateOf(false) }
+    Dialog(
+        title = "Remove the event",
+        description = "Are you sure you want to remove the event \"${event.title}\"?",
+        isVisible = isDialogVisible,
+        onDismissClicked = { isDialogVisible = false },
+        onConfirmClicked = {
+            onRemoveEventClick.invoke()
+            isDialogVisible = false
+        }
+    )
     Column(modifier = modifier.fillMaxSize()) {
         Toolbar(
             title = event.title,
             onBackPressed = onBackPressed,
             actions = {
-                IconButton(onClick = onRemoveEventClick) { // TODO add dialog for confirmation
+                IconButton(onClick = { isDialogVisible = true }) {
                     Icon(
                         painterResource(Res.drawable.ic_delete),
                         contentDescription = "Remove event"

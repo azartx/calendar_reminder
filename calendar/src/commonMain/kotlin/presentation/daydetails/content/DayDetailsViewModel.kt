@@ -1,6 +1,7 @@
 package com.solo4.calendarreminder.calendar.presentation.daydetails.content
 
 import com.solo4.calendarreminder.calendar.data.repository.calendar.CalendarRepository
+import com.solo4.calendarreminder.calendar.data.repository.daydetails.DayDetailsRepository
 import com.solo4.calendarreminder.calendar.presentation.calendar.content.utils.DATE_PATTERN
 import com.solo4.calendarreminder.calendar.presentation.calendar.content.utils.formatDateIdToDayMillis
 import com.solo4.calendarreminder.calendar.presentation.calendar.content.utils.toDateByPattern
@@ -12,7 +13,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class DayDetailsViewModel(
-    private val repository: CalendarRepository,
+    private val calendarRepository: CalendarRepository,
+    private val dayDetailsRepository: DayDetailsRepository,
     calendar: CalendarWrapper,
     val dayId: Long
 ) : ViewModel() {
@@ -26,7 +28,18 @@ class DayDetailsViewModel(
 
     fun loadDayEvents() {
         viewModelScope.launch {
-            _screenState.emit(DayDetailsScreenState.Content(repository.getMonthEvents(dayId)))
+            _screenState.emit(
+                DayDetailsScreenState.Content(calendarRepository.getMonthEvents(dayId))
+            )
+        }
+    }
+
+    fun removeEvent(eventId: Int) {
+        viewModelScope.launch {
+            dayDetailsRepository.removeEvent(eventId)
+            _screenState.emit(
+                DayDetailsScreenState.Content(calendarRepository.getMonthEvents(dayId))
+            )
         }
     }
 }

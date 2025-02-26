@@ -58,7 +58,8 @@ class DayDetailsComponent(
             onAddEventClick = {
                 navigation.push(NavTarget.AddEventScreen(it))
             },
-            onBackPressed = navigation::pop
+            onBackPressed = navigation::pop,
+            onRemoveEventLongTap = viewModel::removeEvent
         )
     }
 

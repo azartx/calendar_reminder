@@ -30,6 +30,10 @@ class EventDetailsComponent(
 
     private val viewModel = viewModel<EventDetailsViewModel, EventDetailsComponent> {
         parametersOf(targetEvent)
+    }.apply {
+        registerOnBackEvent {
+            navigation.pop()
+        }
     }
 
     @Composable

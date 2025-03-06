@@ -79,8 +79,8 @@ class CalendarModelFactory(
                 days.add(
                     AppCalendarItemModel(
                         day = day,
-                        month = calendar.month,
-                        year = calendar.year,
+                        month = nextMonthNumber,
+                        year = nextMonthYear,
                         dayOfWeek = nextMonth.dayOfWeekNumber(day)
                     )
                 )

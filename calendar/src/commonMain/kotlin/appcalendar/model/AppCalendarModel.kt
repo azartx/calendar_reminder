@@ -1,7 +1,5 @@
 package appcalendar.model
 
-import appcalendar.model.AppCalendarRow
-
 data class AppCalendarModel(
     val rows: List<AppCalendarRow>,
     val modelFormattedDate: String,

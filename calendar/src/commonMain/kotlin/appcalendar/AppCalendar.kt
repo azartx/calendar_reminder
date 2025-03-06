@@ -21,18 +21,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import appcalendar.model.AppCalendarItemModel
 import appcalendar.model.AppCalendarModel
+import com.solo4.calendarreminder.calendar.appcalendar.model.WeekDayNames
 import com.solo4.calendarreminder.calendar.presentation.calendar.content.model.HorizontalSwipeDirection
 
 @Composable
 fun AppCalendar(
     model: AppCalendarModel,
+    weekDayNames: WeekDayNames,
     modifier: Modifier,
     onHorizontalSwipe: (HorizontalSwipeDirection) -> Unit,
     onItemClick: (AppCalendarItemModel) -> Unit
 ) {
+
     var draggingPosition by remember { mutableFloatStateOf(0f) }
     Column(
         modifier = modifier.pointerInput("") {
@@ -48,6 +52,10 @@ fun AppCalendar(
             )
         }
     ) {
+        WeekDaysRow(
+            modifier = Modifier.fillMaxWidth(),
+            weekDayNames = weekDayNames
+        )
         model.rows.forEach { rowData ->
             Row(modifier = Modifier.fillMaxWidth()) {
                 rowData.rowItems.forEach { rowItem ->
@@ -80,6 +88,23 @@ fun AppCalendar(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun WeekDaysRow(modifier: Modifier, weekDayNames: WeekDayNames) {
+    Row(modifier = modifier) {
+        weekDayNames.asList.forEach { dayName ->
+            Box(
+                modifier = Modifier.defaultMinSize(48.dp).weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = dayName,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }

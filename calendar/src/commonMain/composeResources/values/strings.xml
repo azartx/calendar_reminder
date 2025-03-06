@@ -1,3 +1,11 @@
 <resources>
+    <string name="week_day_monday">Mon</string>
+    <string name="week_day_tuesday">Tue</string>
+    <string name="week_day_wednesday">Wed</string>
+    <string name="week_day_thursday">Thu</string>
+    <string name="week_day_friday">Fri</string>
+    <string name="week_day_saturday">Sat </string>
+    <string name="week_day_sunday">Sun</string>
+
     <string name="screen_calendar_button_add_event_label">Add new event</string>
 </resources>

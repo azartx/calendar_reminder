@@ -75,6 +75,13 @@ kotlin {
                 implementation(libs.koin.android)
             }
         }
+
+        val jvmMain by getting {
+            dependencies {
+                implementation(compose.desktop.windows_x64)
+                // and other desktop os supporting ...
+            }
+        }
     }
 }
 
@@ -139,6 +146,7 @@ dependencies {
     add("kspIosSimulatorArm64", libs.androidx.room.roomCompiler)
     add("kspIosX64", libs.androidx.room.roomCompiler)
     add("kspIosArm64", libs.androidx.room.roomCompiler)
+    add("kspJvm", libs.androidx.room.roomCompiler)
 }
 
 tasks.register("testClasses")

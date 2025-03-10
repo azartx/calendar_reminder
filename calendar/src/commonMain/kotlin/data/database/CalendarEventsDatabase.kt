@@ -39,8 +39,6 @@ abstract class CalendarEventsDatabase : RoomDatabase() {
 }
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")
-expect object AppDatabaseConstructor : RoomDatabaseConstructor<CalendarEventsDatabase> {
-    override fun initialize(): CalendarEventsDatabase
-}
+expect object AppDatabaseConstructor : RoomDatabaseConstructor<CalendarEventsDatabase>
 
 expect fun CalendarEventsDatabase.Creator.builder(): RoomDatabase.Builder<CalendarEventsDatabase>

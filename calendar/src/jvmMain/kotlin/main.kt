@@ -22,7 +22,9 @@ fun main() {
 
     application {
         Window(
-            onCloseRequest = ::exitApplication
+            onCloseRequest = ::exitApplication,
+            title = "Calendar reminder",
+            resizable = false,
         ) {
             rootComponent.Content(Modifier)
         }

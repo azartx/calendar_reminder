@@ -80,6 +80,8 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.windows_x64)
                 // and other desktop os supporting ...
+
+                implementation(libs.kotlin.coroutinesSwing)
             }
         }
     }

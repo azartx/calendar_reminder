@@ -59,6 +59,8 @@ kotlin {
                 implementation(libs.serialization)
 
                 implementation(libs.koin.core)
+
+                implementation(libs.kotlin.coroutines)
             }
         }
 
@@ -82,6 +84,8 @@ kotlin {
                 // and other desktop os supporting ...
 
                 implementation(libs.kotlin.coroutinesSwing)
+
+                implementation(libs.kotlin.coroutines)
             }
         }
     }

@@ -1,6 +1,8 @@
 package com.solo4.calendarreminder.calendar.presentation.eventdetails
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ComponentContext
@@ -38,9 +40,12 @@ class EventDetailsComponent(
 
     @Composable
     fun Content(modifier: Modifier) {
+        val event by viewModel.calendarEventState.collectAsState()
         EventDetailsScreen(
             modifier,
-            remember { viewModel.event },
+            event,
+            onEventUpdated = viewModel::updateEvent,
+            onEventChangesSaved = viewModel::saveEventChanges,
             navigation::pop,
             viewModel::removeEvent
         )

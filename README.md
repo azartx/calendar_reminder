@@ -1,6 +1,6 @@
 # Calendar reminder backlog
 ## Infra
-* remove app module
+* ~~remove app module~~
 * implement correct MVI lib or own solution (with effects handling - errors and other)
 * separate features into own modules
 * upgrade event details screen

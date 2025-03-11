@@ -17,7 +17,6 @@ dependencyResolutionManagement {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "calendar_reminder"
-//include(":app")
 include(":core:mvi")
 include(":core:calendar")
 include(":core:permissions")

@@ -24,5 +24,8 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.serialization)
         }
+        jvmTest.dependencies {
+            implementation(kotlin("test"))
+        }
     }
 }

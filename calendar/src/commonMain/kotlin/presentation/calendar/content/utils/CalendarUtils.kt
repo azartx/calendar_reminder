@@ -39,10 +39,18 @@ fun CalendarWrapper.formatDateIdToDayMillis(dayId: Long): Long {
     return millisOf(year, month, day)
 }
 
+/**
+ * Local day-start → Material DatePicker UTC midnight for the same calendar date.
+ * Name kept for call-site compatibility; conversion is DST-safe.
+ */
 fun CalendarWrapper.addTimezoneOffset(millis: Long): Long {
-    return millis + timeZoneOffset
+    return toDatePickerMillis(millis)
 }
 
+/**
+ * Material DatePicker UTC midnight → local day-start for the same calendar date.
+ * Name kept for call-site compatibility; conversion is DST-safe.
+ */
 fun CalendarWrapper.removeTimezoneOffset(millis: Long): Long {
-    return millis - timeZoneOffset
+    return fromDatePickerMillis(millis)
 }

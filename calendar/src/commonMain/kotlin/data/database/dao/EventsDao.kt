@@ -1,4 +1,4 @@
-package com.solo4.calendarreminder.calendar.data.database.dao
+package com.solo4.calendarreminder.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert

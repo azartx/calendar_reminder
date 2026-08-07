@@ -73,6 +73,6 @@ class AddEventComponent(
     }
 
     override fun onDestroy() {
-        closeScope()
+        scope.close()
     }
 }

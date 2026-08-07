@@ -13,6 +13,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        AndroidAppContext.init(this)
         multiplatformContext = createMultiplatformContext()
 
         startKoin {

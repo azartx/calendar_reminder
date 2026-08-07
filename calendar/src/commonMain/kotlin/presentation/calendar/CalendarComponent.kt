@@ -54,6 +54,6 @@ class CalendarComponent(
     }
 
     override fun onDestroy() {
-        closeScope()
+        scope.close()
     }
 }

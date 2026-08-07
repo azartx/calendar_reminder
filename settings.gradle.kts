@@ -5,6 +5,9 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+}
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
     repositories {
@@ -23,4 +26,5 @@ include(":core:permissions")
 include(":core:kmputils")
 include(":core:ui-components")
 include(":calendar")
+include(":androidApp")
 include(":domain:eventmanager")

@@ -7,7 +7,7 @@ import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 
-actual fun CalendarEventsDatabase.Creator.builder(): RoomDatabase.Builder<CalendarEventsDatabase> {
+actual fun calendarEventsDatabaseBuilder(): RoomDatabase.Builder<CalendarEventsDatabase> {
     val dbFilePath = documentDirectory() + "/my_room.db"
     return Room.databaseBuilder<CalendarEventsDatabase>(
         name = dbFilePath,

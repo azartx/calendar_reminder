@@ -52,6 +52,6 @@ class EventDetailsComponent(
     }
 
     override fun onDestroy() {
-        closeScope()
+        scope.close()
     }
 }

@@ -64,6 +64,6 @@ class DayDetailsComponent(
     }
 
     override fun onDestroy() {
-        closeScope()
+        scope.close()
     }
 }

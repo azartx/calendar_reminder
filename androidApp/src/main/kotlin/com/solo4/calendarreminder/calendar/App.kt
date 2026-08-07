@@ -3,6 +3,7 @@ package com.solo4.calendarreminder.calendar
 import android.app.Application
 import com.solo4.calendarreminder.calendar.di.applyApplicationModules
 import com.solo4.core.kmputils.MultiplatformContext
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 class App : Application() {
@@ -17,6 +18,7 @@ class App : Application() {
         multiplatformContext = createMultiplatformContext()
 
         startKoin {
+            androidContext(this@App)
             applyApplicationModules(multiplatformContext)
         }
     }

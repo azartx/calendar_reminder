@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Calendar Reminder</string>
+    <string name="calendar_events_channel_name">Calendar reminders</string>
+    <string name="calendar_events_channel_description">Notifications for upcoming calendar events</string>
 </resources>

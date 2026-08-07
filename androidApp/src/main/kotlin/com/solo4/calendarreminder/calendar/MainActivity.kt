@@ -6,20 +6,18 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.arkivanov.decompose.retainedComponent
+import com.solo4.calendarreminder.calendar.domain.RestoreRemindersUseCase
 import com.solo4.calendarreminder.calendar.presentation.root.RootComponent
-import com.solo4.core.calendar.getPlatformCalendar
 import com.solo4.core.kmputils.MultiplatformContext
 import com.solo4.core.permissions.ExactAlarm
 import com.solo4.core.permissions.Notifications
 import com.solo4.core.permissions.PermissionsHandler
 import com.solo4.core.permissions.getPermissionHandler
 import com.solo4.domain.eventmanager.EventsNotificationManager
-import com.solo4.domain.eventmanager.getEventsNotificationManager
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
 
@@ -40,10 +38,8 @@ class MainActivity : ComponentActivity() {
         }
     }.apply { setContext(this@MainActivity) }
 
-    private val eventNotificationManager: EventsNotificationManager = getEventsNotificationManager(
-        App.multiplatformContext,
-        getPlatformCalendar()
-    )
+    private val eventNotificationManager: EventsNotificationManager by inject()
+    private val restoreRemindersUseCase: RestoreRemindersUseCase by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,20 +54,23 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        reconcileReminders()
+    }
+
     private fun askPermissions() {
         if (!permissionHandler.hasPermission(Notifications)) {
             lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.CREATED) {
-                    val isNotificationPermissionGranted =
-                        permissionHandler.askPermission(Notifications)
+                val isNotificationPermissionGranted =
+                    permissionHandler.askPermission(Notifications)
 
-                    if (!isNotificationPermissionGranted) {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Уведомления запрещены",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
+                if (!isNotificationPermissionGranted) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Уведомления запрещены",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -79,13 +78,24 @@ class MainActivity : ComponentActivity() {
         if (!eventNotificationManager.canScheduleEvent()) {
             AlertDialog.Builder(this)
                 .setTitle("Alarm manager permission")
-                .setMessage("To ensure timely notifications of events you add, you need to grant permission to wake up the app.")
+                .setMessage(
+                    "To ensure timely notifications of events you add, " +
+                        "you need to grant permission to wake up the app."
+                )
                 .setPositiveButton(android.R.string.ok) { d, _ ->
                     lifecycleScope.launch {
                         permissionHandler.askPermission(ExactAlarm)
                     }
                     d.dismiss()
                 }
+                .setNegativeButton(android.R.string.cancel) { d, _ -> d.dismiss() }
+                .show()
+        }
+    }
+
+    private fun reconcileReminders() {
+        lifecycleScope.launch {
+            runCatching { restoreRemindersUseCase() }
         }
     }
 }

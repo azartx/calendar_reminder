@@ -15,9 +15,21 @@ class CalendarEventMapper {
                     dayMillis = dayEventRelation.day.yearMonthDaySum,
                     title = event.title,
                     description = event.description,
-                    eventTimeMillis = event.eventTimeMillis
+                    eventTimeMillis = event.eventTimeMillis,
+                    scheduleBeforeMillis = event.scheduleBeforeMillis,
                 )
             }
+    }
+
+    fun mapToCalendarEvent(event: EventEntity): CalendarEvent {
+        return CalendarEvent(
+            eventId = event.id,
+            dayMillis = event.dayId,
+            title = event.title,
+            description = event.description,
+            eventTimeMillis = event.eventTimeMillis,
+            scheduleBeforeMillis = event.scheduleBeforeMillis,
+        )
     }
 
     fun mapToDayEventRelation(
@@ -34,7 +46,8 @@ class CalendarEventMapper {
                     dayId = event.dayMillis,
                     title = event.title,
                     description = event.description,
-                    eventTimeMillis = event.eventTimeMillis
+                    eventTimeMillis = event.eventTimeMillis,
+                    scheduleBeforeMillis = event.scheduleBeforeMillis,
                 )
             }
         )
@@ -46,7 +59,8 @@ class CalendarEventMapper {
             dayId = event.dayMillis,
             title = event.title,
             description = event.description,
-            eventTimeMillis = event.eventTimeMillis
+            eventTimeMillis = event.eventTimeMillis,
+            scheduleBeforeMillis = event.scheduleBeforeMillis,
         )
     }
 }

@@ -10,6 +10,7 @@ expect fun calendarEventsDatabaseBuilder(): RoomDatabase.Builder<CalendarEventsD
 object CalendarEventsDatabaseHolder {
     val instance by lazy {
         calendarEventsDatabaseBuilder()
+            .addMigrations(MIGRATION_1_2)
             .fallbackToDestructiveMigration(false)
             .setDriver(BundledSQLiteDriver())
             .setQueryCoroutineContext(Dispatchers.IO)

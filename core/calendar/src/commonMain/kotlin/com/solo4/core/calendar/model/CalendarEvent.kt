@@ -9,4 +9,6 @@ data class CalendarEvent(
     val title: String,
     val description: String,
     val eventTimeMillis: Long,
+    /** Milliseconds before eventTimeMillis to fire reminder. 0 = no reminder. */
+    val scheduleBeforeMillis: Long = 0L,
 )

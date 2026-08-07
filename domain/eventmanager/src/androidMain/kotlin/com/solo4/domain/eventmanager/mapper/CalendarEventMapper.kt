@@ -21,7 +21,7 @@ internal class CalendarEventMapper {
             dayMillis = event.dayMillis,
             title = event.title,
             description = event.description,
-            eventTimeMillis = event.eventTimeMillis
+            eventTimeMillis = event.eventTimeMillis,
         )
     }
 }

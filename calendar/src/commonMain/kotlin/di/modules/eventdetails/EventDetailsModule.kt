@@ -15,6 +15,6 @@ val eventDetailsModule = module {
         scoped { CalendarEventMapper() }
 
         // presentation
-        scoped { params -> EventDetailsViewModel(params.get(), get()) }
+        scoped { params -> EventDetailsViewModel(params.get(), get(), get()) }
     }
 }

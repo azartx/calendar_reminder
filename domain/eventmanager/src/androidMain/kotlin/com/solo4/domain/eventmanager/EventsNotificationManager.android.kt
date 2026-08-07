@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import com.solo4.core.calendar.CalendarWrapper
 import com.solo4.core.calendar.model.CalendarEvent
 import com.solo4.core.kmputils.MultiplatformContext
@@ -30,10 +29,12 @@ internal class AndroidEventsNotificationManager(
     private val context: MultiplatformContext,
     private val calendar: CalendarWrapper,
     private val mapper: CalendarEventMapper
-): EventsNotificationManager {
+) : EventsNotificationManager {
 
     private val _context: Context
-        get() { return context.getContext() as Context }
+        get() {
+            return context.getContext() as Context
+        }
 
     private val alarmManager by lazy { _context.getSystemService(AlarmManager::class.java) }
 
@@ -41,25 +42,25 @@ internal class AndroidEventsNotificationManager(
         event: CalendarEvent,
         scheduleBeforeMillis: Long
     ) {
-        if (!isFeatureEvent(event, scheduleBeforeMillis)) {
-            Log.w(TAG, "Old event can't be posted for notifying")
+        if (event.eventId <= 0) {
+            Log.e(TAG, "Cannot schedule event without a valid eventId")
+            return
+        }
+        // 0 means "no reminder" (Millis.NONE)
+        if (scheduleBeforeMillis <= 0L) {
+            Log.d(TAG, "Skip scheduling: reminder disabled for eventId=${event.eventId}")
+            return
+        }
+        if (!isFutureEvent(event, scheduleBeforeMillis)) {
+            Log.w(TAG, "Past event can't be scheduled for notifying")
             return
         }
         if (!canScheduleEvent()) {
             Log.e(TAG, "Alarm manager can't schedule the event")
-            Toast.makeText(_context, "canScheduleEvent == false", Toast.LENGTH_LONG).show()
             return
         }
 
-        val intent = Intent(_context, CalendarNotificationsBroadcastReceiver::class.java)
-        intent.putExtra(Event::class.simpleName, mapper.map(event))
-
-        val pendingIntent = PendingIntent.getBroadcast(
-            _context,
-            (0..1000).random(),
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
+        val pendingIntent = createPendingIntent(event)
 
         try {
             alarmManager.setExactAndAllowWhileIdle(
@@ -72,7 +73,29 @@ internal class AndroidEventsNotificationManager(
         }
     }
 
-    private fun isFeatureEvent(event: CalendarEvent, scheduleBeforeMillis: Long): Boolean {
+    override fun cancelEvent(eventId: Int) {
+        if (eventId <= 0) return
+        val pendingIntent = createPendingIntent(eventId)
+        alarmManager.cancel(pendingIntent)
+        pendingIntent.cancel()
+    }
+
+    override fun rescheduleEvent(
+        event: CalendarEvent,
+        scheduleBeforeMillis: Long
+    ) {
+        cancelEvent(event.eventId)
+        if (scheduleBeforeMillis <= 0L) return
+        scheduleEvent(event, scheduleBeforeMillis)
+    }
+
+    override fun restoreScheduledEvents(reminders: List<ScheduledReminder>) {
+        reminders.forEach { reminder ->
+            scheduleEvent(reminder.event, reminder.scheduleBeforeMillis)
+        }
+    }
+
+    private fun isFutureEvent(event: CalendarEvent, scheduleBeforeMillis: Long): Boolean {
         val scheduleTimeMillis = event.eventTimeMillis - scheduleBeforeMillis
         return calendar.millisNow < scheduleTimeMillis
     }
@@ -80,6 +103,30 @@ internal class AndroidEventsNotificationManager(
     override fun canScheduleEvent(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             alarmManager.canScheduleExactAlarms()
-        } else true
+        } else {
+            true
+        }
+    }
+
+    private fun createPendingIntent(event: CalendarEvent): PendingIntent {
+        val intent = Intent(_context, CalendarNotificationsBroadcastReceiver::class.java).apply {
+            putExtra(Event::class.simpleName, mapper.map(event))
+        }
+        return PendingIntent.getBroadcast(
+            _context,
+            event.eventId,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
+    private fun createPendingIntent(eventId: Int): PendingIntent {
+        val intent = Intent(_context, CalendarNotificationsBroadcastReceiver::class.java)
+        return PendingIntent.getBroadcast(
+            _context,
+            eventId,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
     }
 }

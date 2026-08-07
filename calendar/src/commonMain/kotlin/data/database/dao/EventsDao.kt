@@ -23,6 +23,9 @@ interface EventsDao {
     @Query("SELECT * FROM days_table")
     suspend fun getAll(): List<DayEntity>
 
+    @Query("SELECT * FROM events_table")
+    suspend fun getAllEvents(): List<EventEntity>
+
     @Query("SELECT EXISTS(SELECT * FROM days_table WHERE id = :dayId)")
     suspend fun isDayExists(dayId: Long): Boolean
 
@@ -33,7 +36,7 @@ interface EventsDao {
     suspend fun setDay(dayEntity: DayEntity)
 
     @Insert(entity = EventEntity::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun setEvent(eventEntity: EventEntity)
+    suspend fun setEvent(eventEntity: EventEntity): Long
 
     @Insert(entity = EventEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun setEvents(eventEntity: List<EventEntity>)
@@ -51,11 +54,11 @@ interface EventsDao {
     }
 
     @Transaction
-    suspend fun setDayEvent(eventEntity: EventEntity) {
+    suspend fun setDayEvent(eventEntity: EventEntity): Long {
         if (!isDayExists(eventEntity.dayId)) {
             setDay(DayEntity(eventEntity.dayId))
         }
 
-        setEvent(eventEntity)
+        return setEvent(eventEntity)
     }
 }

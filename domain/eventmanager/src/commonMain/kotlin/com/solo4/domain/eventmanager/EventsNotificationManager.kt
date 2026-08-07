@@ -9,11 +9,25 @@ expect fun getEventsNotificationManager(
     calendar: CalendarWrapper
 ): EventsNotificationManager
 
+data class ScheduledReminder(
+    val event: CalendarEvent,
+    val scheduleBeforeMillis: Long
+)
+
 interface EventsNotificationManager {
     fun scheduleEvent(
         event: CalendarEvent,
         scheduleBeforeMillis: Long
     )
 
-    fun canScheduleEvent() : Boolean
+    fun cancelEvent(eventId: Int)
+
+    fun rescheduleEvent(
+        event: CalendarEvent,
+        scheduleBeforeMillis: Long
+    )
+
+    fun restoreScheduledEvents(reminders: List<ScheduledReminder>)
+
+    fun canScheduleEvent(): Boolean
 }

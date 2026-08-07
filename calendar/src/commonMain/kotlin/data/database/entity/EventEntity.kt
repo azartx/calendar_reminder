@@ -21,5 +21,8 @@ data class EventEntity(
     val description: String,
 
     @ColumnInfo(name = "event_time_millis")
-    val eventTimeMillis: Long
+    val eventTimeMillis: Long,
+
+    @ColumnInfo(name = "schedule_before_millis", defaultValue = "0")
+    val scheduleBeforeMillis: Long = 0L,
 )

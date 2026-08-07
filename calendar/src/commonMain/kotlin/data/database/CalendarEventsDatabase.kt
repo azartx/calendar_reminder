@@ -13,7 +13,7 @@ import com.solo4.calendarreminder.data.database.entity.EventEntity
         DayEntity::class,
         EventEntity::class
     ],
-    version = 1
+    version = 2
 )
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class CalendarEventsDatabase : RoomDatabase() {

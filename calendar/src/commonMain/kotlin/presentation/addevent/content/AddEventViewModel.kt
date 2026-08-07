@@ -117,6 +117,7 @@ class AddEventViewModel(
 
             if (!errorDelegate.isScreenStateValid(data)) return@launch
 
+            val scheduleBeforeMillis = data.selectedScheduleBeforeMillis.millis
             val event = CalendarEvent(
                 dayMillis = getFormattedDateId(
                     day = calendar.dayOfMonthOf(eventDate),
@@ -125,13 +126,15 @@ class AddEventViewModel(
                 ),
                 title = data.title,
                 description = data.description,
-                eventTimeMillis = eventTimeMillis
+                eventTimeMillis = eventTimeMillis,
+                scheduleBeforeMillis = scheduleBeforeMillis,
             )
-            addEventRepository.saveEvent(event)
+            val eventId = addEventRepository.saveEvent(event)
+            val savedEvent = event.copy(eventId = eventId)
 
             eventsNotificationManager.scheduleEvent(
-                event,
-                data.selectedScheduleBeforeMillis.millis
+                savedEvent,
+                scheduleBeforeMillis
             )
 
             _navigationState.emit(Unit)

@@ -12,9 +12,9 @@ class AddEventRepository(
     private val calendarEventMapper: CalendarEventMapper
 ) {
 
-    suspend fun saveEvent(event: CalendarEvent) {
-        withContext(Dispatchers.IO) {
-            eventsDao.setDayEvent(calendarEventMapper.mapToDayEventRelation(event))
+    suspend fun saveEvent(event: CalendarEvent): Int {
+        return withContext(Dispatchers.IO) {
+            eventsDao.setDayEvent(calendarEventMapper.mapToDayEventRelation(event)).toInt()
         }
     }
 }

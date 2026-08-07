@@ -18,6 +18,14 @@ val dayDetailsModule = module {
         // domain
 
         // presentation
-        scoped { params -> DayDetailsViewModel(get(), get(), get(), params.get<DayIdParam>().dayId) }
+        scoped { params ->
+            DayDetailsViewModel(
+                calendarRepository = get(),
+                dayDetailsRepository = get(),
+                eventsNotificationManager = get(),
+                calendar = get(),
+                dayId = params.get<DayIdParam>().dayId,
+            )
+        }
     }
 }

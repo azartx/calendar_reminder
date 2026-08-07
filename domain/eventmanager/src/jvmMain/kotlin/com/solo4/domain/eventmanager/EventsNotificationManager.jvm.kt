@@ -12,8 +12,12 @@ actual fun getEventsNotificationManager(
     return object : EventsNotificationManager {
         override fun scheduleEvent(event: CalendarEvent, scheduleBeforeMillis: Long) {}
 
-        override fun canScheduleEvent(): Boolean {
-            return false
-        }
+        override fun cancelEvent(eventId: Int) {}
+
+        override fun rescheduleEvent(event: CalendarEvent, scheduleBeforeMillis: Long) {}
+
+        override fun restoreScheduledEvents(reminders: List<ScheduledReminder>) {}
+
+        override fun canScheduleEvent(): Boolean = false
     }
 }

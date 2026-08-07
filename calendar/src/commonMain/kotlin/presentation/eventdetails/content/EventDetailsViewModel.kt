@@ -3,14 +3,16 @@ package com.solo4.calendarreminder.calendar.presentation.eventdetails.content
 import com.solo4.calendarreminder.calendar.data.repository.eventdetails.EventDetailsRepository
 import com.solo4.core.calendar.model.CalendarEvent
 import com.solo4.core.mvi.decompose.ViewModel
-import kotlinx.coroutines.launch
+import com.solo4.domain.eventmanager.EventsNotificationManager
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class EventDetailsViewModel(
     private val baseEvent: CalendarEvent,
     private val eventDetailsRepository: EventDetailsRepository,
+    private val eventsNotificationManager: EventsNotificationManager,
 ) : ViewModel() {
 
     // TODO implement errors after save the changed event
@@ -26,6 +28,7 @@ class EventDetailsViewModel(
 
     fun removeEvent() {
         viewModelScope.launch {
+            eventsNotificationManager.cancelEvent(baseEvent.eventId)
             eventDetailsRepository.removeEvent(baseEvent.eventId)
             onBackListener.invoke()
             onBackListener = {}
@@ -39,6 +42,10 @@ class EventDetailsViewModel(
     fun saveEventChanges(calendarEvent: CalendarEvent) {
         viewModelScope.launch {
             eventDetailsRepository.saveEvent(calendarEvent)
+            eventsNotificationManager.rescheduleEvent(
+                calendarEvent,
+                calendarEvent.scheduleBeforeMillis
+            )
         }
     }
 }

@@ -8,6 +8,7 @@ import com.solo4.calendarreminder.calendar.presentation.calendar.content.utils.t
 import com.solo4.calendarreminder.calendar.presentation.daydetails.content.state.DayDetailsScreenState
 import com.solo4.core.calendar.CalendarWrapper
 import com.solo4.core.mvi.decompose.ViewModel
+import com.solo4.domain.eventmanager.EventsNotificationManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 class DayDetailsViewModel(
     private val calendarRepository: CalendarRepository,
     private val dayDetailsRepository: DayDetailsRepository,
+    private val eventsNotificationManager: EventsNotificationManager,
     calendar: CalendarWrapper,
     val dayId: Long
 ) : ViewModel() {
@@ -36,6 +38,7 @@ class DayDetailsViewModel(
 
     fun removeEvent(eventId: Int) {
         viewModelScope.launch {
+            eventsNotificationManager.cancelEvent(eventId)
             dayDetailsRepository.removeEvent(eventId)
             _screenState.emit(
                 DayDetailsScreenState.Content(calendarRepository.getMonthEvents(dayId))

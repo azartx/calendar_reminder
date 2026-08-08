@@ -14,18 +14,30 @@ import com.arkivanov.decompose.extensions.compose.lifecycle.LifecycleController
 import com.arkivanov.essenty.backhandler.BackDispatcher
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.solo4.calendarreminder.calendar.di.applyApplicationModules
+import com.solo4.calendarreminder.calendar.domain.RestoreRemindersUseCase
 import com.solo4.calendarreminder.calendar.presentation.root.RootComponent
 import com.solo4.calendarreminder.shared.calendar.generated.resources.Res
 import com.solo4.calendarreminder.shared.calendar.generated.resources.ic_app
 import com.solo4.core.kmputils.MultiplatformContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.context.startKoin
+import org.koin.mp.KoinPlatform.getKoin
 import utils.runOnUiThread
 
 @OptIn(ExperimentalDecomposeApi::class)
 fun main() {
     startKoin {
         applyApplicationModules(createMultiplatformContext())
+    }
+
+    CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
+        runCatching {
+            getKoin().get<RestoreRemindersUseCase>().invoke()
+        }
     }
 
     val lifecycle = LifecycleRegistry()

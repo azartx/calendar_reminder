@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,10 +32,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.solo4.calendarreminder.calendar.presentation.daydetails.content.state.DayDetailsScreenState
 import com.solo4.calendarreminder.shared.calendar.generated.resources.Res
+import com.solo4.calendarreminder.shared.calendar.generated.resources.ic_delete
 import com.solo4.calendarreminder.shared.calendar.generated.resources.screen_calendar_button_add_event_label
 import com.solo4.core.calendar.model.CalendarEvent
 import com.solo4.core.uicomponents.Toolbar
 import com.solo4.core.uicomponents.Dialog
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -96,9 +100,14 @@ fun DayDetailsScreen(
                                     onClick = {
                                         onEventDetailsClick.invoke(event)
                                     }
-                                )
+                                ),
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)) {
+                            Column(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(horizontal = 10.dp)
+                            ) {
                                 Text(
                                     modifier = Modifier.padding(bottom = 8.dp),
                                     text = event.title,
@@ -107,6 +116,14 @@ fun DayDetailsScreen(
                                 Text(
                                     modifier = Modifier,
                                     text = event.description
+                                )
+                            }
+                            IconButton(
+                                onClick = { dialogState = event.eventId to true }
+                            ) {
+                                Icon(
+                                    painter = painterResource(Res.drawable.ic_delete),
+                                    contentDescription = "Remove event",
                                 )
                             }
                         }

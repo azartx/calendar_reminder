@@ -1,5 +1,6 @@
 package com.solo4.calendarreminder.calendar.presentation.root
 
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -8,11 +9,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.backStack
 import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.backhandler.BackCallback
 import com.solo4.calendarreminder.calendar.presentation.addevent.AddEventComponent
 import com.solo4.calendarreminder.calendar.presentation.calendar.CalendarComponent
 import com.solo4.calendarreminder.calendar.presentation.daydetails.DayDetailsComponent
@@ -38,15 +36,6 @@ class RootComponent(
             childFactory = ::childFactory,
         )
 
-    init {
-        backHandler.register(object : BackCallback() {
-            override fun onBack() {
-                isEnabled = stack.backStack.size != 1
-                navigation.pop()
-            }
-        })
-    }
-
     private fun childFactory(
         navTarget: NavTarget,
         componentContext: ComponentContext
@@ -62,10 +51,10 @@ class RootComponent(
     @Composable
     fun Content(modifier: Modifier) {
         MaterialTheme {
-            Children(stack, modifier) {
+            Children(stack, modifier.statusBarsPadding()) {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     when (val child = it.instance) {
-                        is CalendarComponent -> child.Content(modifier)
+                        is CalendarComponent -> child.Content(Modifier)
                         is DayDetailsComponent -> child.Content(modifier)
                         is EventDetailsComponent -> child.Content(modifier)
                         is AddEventComponent -> child.Content(modifier)

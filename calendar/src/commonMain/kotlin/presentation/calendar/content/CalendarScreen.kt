@@ -1,13 +1,20 @@
 package com.solo4.calendarreminder.calendar.presentation.calendar.content
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -38,11 +45,38 @@ fun CalendarScreen(
         modifier = modifier.padding(horizontal = 10.dp)
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            Text(
-                modifier = Modifier.fillMaxWidth().padding(top = 30.dp),
-                textAlign = TextAlign.Center,
-                text = calendarState.modelFormattedDate
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                IconButton(
+                    onClick = {
+                        onCalendarHorizontalSwipe(HorizontalSwipeDirection.LEFT)
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                        contentDescription = "Previous month",
+                    )
+                }
+                Text(
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center,
+                    text = calendarState.modelFormattedDate,
+                )
+                IconButton(
+                    onClick = {
+                        onCalendarHorizontalSwipe(HorizontalSwipeDirection.RIGHT)
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        contentDescription = "Next month",
+                    )
+                }
+            }
             AppCalendar(
                 modifier = Modifier
                     .padding(vertical = 20.dp)

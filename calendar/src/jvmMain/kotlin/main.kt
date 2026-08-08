@@ -15,7 +15,10 @@ import com.arkivanov.essenty.backhandler.BackDispatcher
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.solo4.calendarreminder.calendar.di.applyApplicationModules
 import com.solo4.calendarreminder.calendar.presentation.root.RootComponent
+import com.solo4.calendarreminder.shared.calendar.generated.resources.Res
+import com.solo4.calendarreminder.shared.calendar.generated.resources.ic_app
 import com.solo4.core.kmputils.MultiplatformContext
+import org.jetbrains.compose.resources.painterResource
 import org.koin.core.context.startKoin
 import utils.runOnUiThread
 
@@ -46,6 +49,7 @@ fun main() {
             onCloseRequest = ::exitApplication,
             state = windowState,
             title = "Calendar Reminder",
+            icon = painterResource(Res.drawable.ic_app),
             resizable = true,
             onKeyEvent = { event ->
                 if (event.key == Key.Escape && event.type == KeyEventType.KeyUp) {

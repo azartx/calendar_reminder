@@ -100,11 +100,17 @@ compose.desktop {
             targetFormats(TargetFormat.Msi, TargetFormat.Exe)
             packageName = "Calendar Reminder"
             packageVersion = "1.0.0"
-            description = "Calendar reminder desktop app"
+            description = "Create calendar events and schedule reminders"
+            copyright = "Copyright 2026 solo4"
             vendor = "solo4"
 
             windows {
+                iconFile.set(project.file("icons/calendar-reminder.ico"))
+                menu = true
                 menuGroup = "Calendar Reminder"
+                shortcut = true
+                dirChooser = true
+                perUserInstall = true
                 upgradeUuid = "B6E6C4A1-2F3D-4A8E-9C11-7D8E5F6A9B20"
             }
         }

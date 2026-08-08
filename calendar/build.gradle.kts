@@ -1,3 +1,5 @@
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.multiplatformLibrary)
@@ -81,11 +83,30 @@ kotlin {
         }
 
         jvmMain.dependencies {
-            implementation(compose.desktop.windows_x64)
+            implementation(compose.desktop.currentOs)
 
             implementation(libs.kotlin.coroutinesSwing)
 
             implementation(libs.kotlin.coroutines)
+        }
+    }
+}
+
+compose.desktop {
+    application {
+        mainClass = "MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Msi, TargetFormat.Exe)
+            packageName = "Calendar Reminder"
+            packageVersion = "1.0.0"
+            description = "Calendar reminder desktop app"
+            vendor = "solo4"
+
+            windows {
+                menuGroup = "Calendar Reminder"
+                upgradeUuid = "B6E6C4A1-2F3D-4A8E-9C11-7D8E5F6A9B20"
+            }
         }
     }
 }

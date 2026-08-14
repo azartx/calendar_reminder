@@ -60,13 +60,17 @@ internal class AndroidEventsNotificationManager(
             return
         }
 
-        val pendingIntent = createPendingIntent(event)
+        val triggerAtMillis = event.eventTimeMillis - scheduleBeforeMillis
+        val operation = createPendingIntent(event)
+        val showIntent = createShowPendingIntent(event.eventId)
 
         try {
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                event.eventTimeMillis - scheduleBeforeMillis,
-                pendingIntent
+            // setAlarmClock is required for reliable overnight/Doze delivery.
+            // setExactAndAllowWhileIdle is limited to ~1 fire / 9 minutes while idle,
+            // so clustered morning reminders are dropped or heavily delayed.
+            alarmManager.setAlarmClock(
+                AlarmManager.AlarmClockInfo(triggerAtMillis, showIntent),
+                operation
             )
         } catch (e: SecurityException) {
             Log.e(TAG, "Alarm manager is not allowed.", e)
@@ -126,6 +130,23 @@ internal class AndroidEventsNotificationManager(
             _context,
             eventId,
             intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
+    private fun createShowPendingIntent(eventId: Int): PendingIntent {
+        val launchIntent = _context.packageManager
+            .getLaunchIntentForPackage(_context.packageName)
+            ?.apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                putExtra(NotificationExtras.EXTRA_EVENT_ID, eventId)
+            }
+            ?: Intent().setPackage(_context.packageName)
+
+        return PendingIntent.getActivity(
+            _context,
+            eventId,
+            launchIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }

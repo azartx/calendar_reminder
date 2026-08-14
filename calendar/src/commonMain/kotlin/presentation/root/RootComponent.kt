@@ -15,6 +15,7 @@ import com.solo4.calendarreminder.calendar.presentation.addevent.AddEventCompone
 import com.solo4.calendarreminder.calendar.presentation.calendar.CalendarComponent
 import com.solo4.calendarreminder.calendar.presentation.daydetails.DayDetailsComponent
 import com.solo4.calendarreminder.calendar.presentation.eventdetails.EventDetailsComponent
+import com.solo4.calendarreminder.calendar.presentation.settings.SettingsComponent
 import com.solo4.core.mvi.decompose.ViewComponent
 import com.solo4.core.mvi.decompose.IRootComponent
 import org.koin.core.component.KoinComponent
@@ -45,6 +46,7 @@ class RootComponent(
             is NavTarget.DayDetailsScreen -> DayDetailsComponent(componentContext, navigation, navTarget.dayId)
             is NavTarget.EventDetailsScreen -> EventDetailsComponent(componentContext, navigation, navTarget.event)
             is NavTarget.AddEventScreen -> AddEventComponent(componentContext, navigation, navTarget.concreteDay)
+            is NavTarget.SettingsScreen -> SettingsComponent(componentContext, navigation)
         }
     }
 
@@ -58,6 +60,7 @@ class RootComponent(
                         is DayDetailsComponent -> child.Content(modifier)
                         is EventDetailsComponent -> child.Content(modifier)
                         is AddEventComponent -> child.Content(modifier)
+                        is SettingsComponent -> child.Content(modifier)
                     }
                 }
             }

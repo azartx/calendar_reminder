@@ -1,5 +1,6 @@
 package com.solo4.calendarreminder.calendar.presentation.calendar.content
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,6 +41,7 @@ fun CalendarScreen(
     calendarState: AppCalendarModel,
     onCalendarDayClicked: (Long) -> Unit,
     onAddEventClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     onCalendarHorizontalSwipe: (HorizontalSwipeDirection) -> Unit,
 ) {
     Column(
@@ -46,9 +49,20 @@ fun CalendarScreen(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+            ) {
+                IconButton(onClick = onSettingsClick) {
+                    Icon(
+                        imageVector = Icons.Filled.Settings,
+                        contentDescription = "Settings",
+                    )
+                }
+            }
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 12.dp),
+                    .padding(top = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(

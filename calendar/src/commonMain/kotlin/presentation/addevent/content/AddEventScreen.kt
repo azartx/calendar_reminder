@@ -22,6 +22,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -30,6 +34,7 @@ import com.solo4.calendarreminder.calendar.presentation.addevent.content.state.A
 import com.solo4.calendarreminder.shared.calendar.generated.resources.Res
 import com.solo4.calendarreminder.shared.calendar.generated.resources.ic_clock
 import com.solo4.core.calendar.model.Millis
+import com.solo4.core.uicomponents.MarkdownEditor
 import com.solo4.core.uicomponents.Toolbar
 import org.jetbrains.compose.resources.painterResource
 
@@ -53,6 +58,7 @@ fun AddEventScreen(
     onSubmitButtonClicked: () -> Unit,
     onBackPressed: () -> Unit,
 ) {
+    var isMarkdownPreviewEnabled by remember { mutableStateOf(false) }
     Column(modifier = modifier) {
         Toolbar(
             title = "Create new event",
@@ -94,14 +100,15 @@ fun AddEventScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        TextField(
+        MarkdownEditor(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
             value = screenState.description,
-            placeholder = { Text(text = "Description") },
+            isPreviewEnabled = isMarkdownPreviewEnabled,
+            onPreviewEnabledChange = { isMarkdownPreviewEnabled = it },
+            onValueChange = onDescriptionTextFieldChanged,
             isError = errorState.isDescriptionValid,
-            onValueChange = onDescriptionTextFieldChanged
         )
 
         Spacer(modifier = Modifier.height(20.dp))

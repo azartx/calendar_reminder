@@ -4,6 +4,7 @@ import com.solo4.calendarreminder.calendar.di.modules.addevent.addEventModule
 import com.solo4.calendarreminder.calendar.di.modules.calendar.calendarModule
 import com.solo4.calendarreminder.calendar.di.modules.daydetails.dayDetailsModule
 import com.solo4.calendarreminder.calendar.di.modules.eventdetails.eventDetailsModule
+import com.solo4.calendarreminder.calendar.di.modules.settings.settingsModule
 import com.solo4.calendarreminder.calendar.di.modules.sharedModule
 import com.solo4.core.kmputils.MultiplatformContext
 import org.koin.core.KoinApplication
@@ -18,6 +19,7 @@ fun KoinApplication.applyApplicationModules(context: MultiplatformContext) {
             dayDetailsModule,
             eventDetailsModule,
             addEventModule,
+            settingsModule,
         )
     )
 }

@@ -49,6 +49,9 @@ class CalendarComponent(
             onAddEventClick = {
                 navigation.push(NavTarget.AddEventScreen(concreteDay = null))
             },
+            onSettingsClick = {
+                navigation.push(NavTarget.SettingsScreen)
+            },
             onCalendarHorizontalSwipe = viewModel::onCalendarSwiped
         )
     }

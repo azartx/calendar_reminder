@@ -17,4 +17,7 @@ sealed class NavTarget  {
 
     @Serializable
     data class AddEventScreen(val concreteDay: Long?) : NavTarget()
+
+    @Serializable
+    data object SettingsScreen : NavTarget()
 }

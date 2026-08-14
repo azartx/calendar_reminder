@@ -1,5 +1,6 @@
 package com.solo4.calendarreminder.calendar.presentation.root
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -53,14 +54,17 @@ class RootComponent(
     @Composable
     fun Content(modifier: Modifier) {
         MaterialTheme {
-            Children(stack, modifier.statusBarsPadding()) {
-                Surface(color = MaterialTheme.colorScheme.background) {
+            Children(stack, modifier.fillMaxSize().statusBarsPadding()) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
                     when (val child = it.instance) {
-                        is CalendarComponent -> child.Content(Modifier)
-                        is DayDetailsComponent -> child.Content(modifier)
-                        is EventDetailsComponent -> child.Content(modifier)
-                        is AddEventComponent -> child.Content(modifier)
-                        is SettingsComponent -> child.Content(modifier)
+                        is CalendarComponent -> child.Content(Modifier.fillMaxSize())
+                        is DayDetailsComponent -> child.Content(Modifier.fillMaxSize())
+                        is EventDetailsComponent -> child.Content(Modifier.fillMaxSize())
+                        is AddEventComponent -> child.Content(Modifier.fillMaxSize())
+                        is SettingsComponent -> child.Content(Modifier.fillMaxSize())
                     }
                 }
             }

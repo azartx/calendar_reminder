@@ -16,6 +16,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import com.mikepenz.markdown.m3.Markdown
 
 @Composable
@@ -60,19 +61,26 @@ fun MarkdownEditor(
                 )
             }
         }
-        if (isPreviewEnabled) {
-            MarkdownText(
-                markdown = value,
-                modifier = Modifier.fillMaxSize()
-            )
-        } else {
-            TextField(
-                modifier = Modifier.fillMaxSize(),
-                value = value,
-                isError = isError,
-                placeholder = { Text(text = placeholder) },
-                onValueChange = onValueChange
-            )
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .clipToBounds()
+        ) {
+            if (isPreviewEnabled) {
+                MarkdownText(
+                    markdown = value,
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
+                TextField(
+                    modifier = Modifier.fillMaxSize(),
+                    value = value,
+                    isError = isError,
+                    placeholder = { Text(text = placeholder) },
+                    onValueChange = onValueChange
+                )
+            }
         }
     }
 }

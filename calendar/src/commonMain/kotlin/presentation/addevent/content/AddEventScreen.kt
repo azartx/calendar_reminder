@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -59,7 +60,7 @@ fun AddEventScreen(
     onBackPressed: () -> Unit,
 ) {
     var isMarkdownPreviewEnabled by remember { mutableStateOf(false) }
-    Column(modifier = modifier) {
+    Column(modifier = modifier.fillMaxSize()) {
         Toolbar(
             title = "Create new event",
             onBackPressed = onBackPressed
@@ -94,7 +95,7 @@ fun AddEventScreen(
             modifier = Modifier.fillMaxWidth(),
             value = screenState.title,
             placeholder = { Text(text = "Title") },
-            isError = errorState.isTitleValid,
+            isError = !errorState.isTitleValid,
             onValueChange = onTitleTextFieldChanged
         )
 
@@ -108,7 +109,7 @@ fun AddEventScreen(
             isPreviewEnabled = isMarkdownPreviewEnabled,
             onPreviewEnabledChange = { isMarkdownPreviewEnabled = it },
             onValueChange = onDescriptionTextFieldChanged,
-            isError = errorState.isDescriptionValid,
+            isError = !errorState.isDescriptionValid,
         )
 
         Spacer(modifier = Modifier.height(20.dp))

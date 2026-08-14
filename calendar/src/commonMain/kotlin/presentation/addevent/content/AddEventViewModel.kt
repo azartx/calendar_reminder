@@ -21,6 +21,7 @@ import com.solo4.core.calendar.model.CalendarEvent
 import com.solo4.core.calendar.model.Millis
 import com.solo4.core.mvi.decompose.ViewModel
 import com.solo4.domain.eventmanager.EventsNotificationManager
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -58,7 +59,10 @@ class AddEventViewModel(
     private val _timePickerState = MutableStateFlow(TimePickerState(0, 0, true))
     val timePickerState = _timePickerState.asStateFlow()
 
-    private val _navigationState = MutableSharedFlow<Unit>()
+    private val _navigationState = MutableSharedFlow<Unit>(
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
     val navigationState = _navigationState.asSharedFlow()
 
     fun onTitleTextFieldChanged(value: String) {
@@ -134,8 +138,6 @@ class AddEventViewModel(
 
     fun onSubmitButtonClicked() {
         viewModelScope.launch {
-            // todo emit loading state
-
             val eventDate = getDateFromPicker()
             val data = screenState.value
 
@@ -163,17 +165,18 @@ class AddEventViewModel(
                 eventTimeMillis = eventTimeMillis,
                 scheduleBeforeMillis = scheduleBeforeMillis,
             )
-            val eventId = addEventRepository.saveEvent(event)
-            val savedEvent = event.copy(eventId = eventId)
-
-            if (shouldNotify) {
-                eventsNotificationManager.scheduleEvent(
-                    savedEvent,
-                    scheduleBeforeMillis
-                )
+            runCatching {
+                val eventId = addEventRepository.saveEvent(event)
+                val savedEvent = event.copy(eventId = eventId)
+                if (shouldNotify) {
+                    eventsNotificationManager.scheduleEvent(
+                        savedEvent,
+                        scheduleBeforeMillis
+                    )
+                }
+            }.onSuccess {
+                _navigationState.emit(Unit)
             }
-
-            _navigationState.emit(Unit)
         }
     }
 

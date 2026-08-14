@@ -3,6 +3,7 @@ package com.solo4.calendarreminder.calendar.presentation.calendar.content
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import appcalendar.AppCalendar
@@ -45,9 +47,16 @@ fun CalendarScreen(
     onCalendarHorizontalSwipe: (HorizontalSwipeDirection) -> Unit,
 ) {
     Column(
-        modifier = modifier.padding(horizontal = 10.dp)
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 10.dp)
     ) {
-        Column(modifier = Modifier.weight(1f)) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .clipToBounds()
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,

@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -83,7 +84,9 @@ fun DayDetailsScreen(
             ?.takeIf { it.isNotEmpty() }
             ?.also { events ->
                 LazyColumn(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .clipToBounds(),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(events) { event ->

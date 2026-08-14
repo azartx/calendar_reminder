@@ -11,16 +11,16 @@ class AddEventErrorDelegate : ErrorDelegate<AddEventScreenState, AddEventErrorSt
     override val errorState: StateFlow<AddEventErrorState> = _errorState.asStateFlow()
 
     override suspend fun isScreenStateValid(state: AddEventScreenState): Boolean {
-        var isValid = true
-        val currentState = _errorState.value
-        val newState = currentState.copy(
-            isTitleValid = state.title.isNotBlank().also { if (!it) isValid = false },
-            isDescriptionValid = state.description.isNotBlank().also { if (!it) isValid = false }
+        val isTitleValid = state.title.isNotBlank()
+        val isDescriptionValid = state.description.isNotBlank()
+        val isValid = isTitleValid && isDescriptionValid
+        _errorState.emit(
+            AddEventErrorState(
+                isTitleValid = isTitleValid,
+                isDescriptionValid = isDescriptionValid
+            )
         )
-        return if (isValid) true else {
-            _errorState.emit(newState)
-            false
-        }
+        return isValid
     }
 
     override suspend fun updateError(lambda: (AddEventErrorState) -> AddEventErrorState) {

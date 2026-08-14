@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.solo4.calendarreminder.calendar.presentation.calendar.content.utils.dayIdToDisplayDate
 import com.solo4.calendarreminder.calendar.presentation.calendar.content.utils.toDateByPattern
 import com.solo4.calendarreminder.shared.calendar.generated.resources.Res
 import com.solo4.calendarreminder.shared.calendar.generated.resources.ic_delete
@@ -80,7 +81,11 @@ fun EventDetailsScreen(
         // if it is in edit mode - show text fields for editing, otherwise show text for viewing
         Text(
             modifier = Modifier.padding(all = 20.dp).fillMaxWidth(),
-            text = event.eventTimeMillis.toDateByPattern(),
+            text = if (event.eventTimeMillis == 0L) {
+                event.dayMillis.dayIdToDisplayDate()
+            } else {
+                event.eventTimeMillis.toDateByPattern()
+            },
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Right
         )

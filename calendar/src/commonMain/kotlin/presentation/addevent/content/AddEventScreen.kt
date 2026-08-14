@@ -16,6 +16,7 @@ import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TimePicker
@@ -47,6 +48,8 @@ fun AddEventScreen(
     onTitleTextFieldChanged: (String) -> Unit,
     onDescriptionTextFieldChanged: (String) -> Unit,
     onDatePickerButtonPressed: () -> Unit,
+    onTimeEnabledChanged: (Boolean) -> Unit,
+    onNotificationEnabledChanged: (Boolean) -> Unit,
     onSubmitButtonClicked: () -> Unit,
     onBackPressed: () -> Unit,
 ) {
@@ -78,26 +81,6 @@ fun AddEventScreen(
                         .padding(top = 10.dp),
                     state = timePickerState
                 )
-
-                Text(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    text = "Send notification before minutes"
-                )
-
-                Row(
-                    modifier = Modifier
-                        .padding(vertical = 10.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    scheduleBeforeMillis.forEach { millis ->
-                        FilterChip(
-                            selected = screenState.selectedScheduleBeforeMillis == millis,
-                            onClick = { onSchedulingFilterChipClicked.invoke(millis) },
-                            label = { Text(text = millis.toMinutes().toString()) }
-                        )
-                    }
-                }
             }
         }
 
@@ -123,21 +106,68 @@ fun AddEventScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        TextField(
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            value = screenState.selectedDate,
-            readOnly = true,
-            onValueChange = {},
-            trailingIcon = {
-                Icon(
-                    modifier = Modifier.clickable(
-                        onClick = onDatePickerButtonPressed
-                    ),
-                    painter = painterResource(resource = Res.drawable.ic_clock),
-                    contentDescription = null
-                )
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TextField(
+                modifier = Modifier.weight(1f),
+                value = screenState.selectedDate,
+                readOnly = true,
+                onValueChange = {},
+                trailingIcon = {
+                    Icon(
+                        modifier = Modifier.clickable(
+                            onClick = onDatePickerButtonPressed
+                        ),
+                        painter = painterResource(resource = Res.drawable.ic_clock),
+                        contentDescription = null
+                    )
+                }
+            )
+            Switch(
+                modifier = Modifier.padding(start = 8.dp),
+                checked = screenState.isTimeEnabled,
+                onCheckedChange = onTimeEnabledChanged
+            )
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                modifier = Modifier.weight(1f),
+                text = "Send notification"
+            )
+            Switch(
+                checked = screenState.isNotificationEnabled,
+                onCheckedChange = onNotificationEnabledChanged
+            )
+        }
+
+        if (screenState.isNotificationEnabled) {
+            Text(
+                modifier = Modifier.padding(top = 8.dp),
+                text = "Send notification before minutes"
+            )
+            Row(
+                modifier = Modifier
+                    .padding(vertical = 10.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                scheduleBeforeMillis.forEach { millis ->
+                    FilterChip(
+                        selected = screenState.selectedScheduleBeforeMillis == millis,
+                        onClick = { onSchedulingFilterChipClicked.invoke(millis) },
+                        label = { Text(text = millis.toMinutes().toString()) }
+                    )
+                }
             }
-        )
+        }
 
         Button(
             modifier = Modifier

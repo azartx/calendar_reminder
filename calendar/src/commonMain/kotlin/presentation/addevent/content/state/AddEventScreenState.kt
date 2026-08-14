@@ -9,5 +9,7 @@ data class AddEventScreenState(
     val isDatePickerVisible: Boolean = false,
     val isTimePickerVisible: Boolean = false,
     val selectedDate: String = "Date is not selected",
+    val isTimeEnabled: Boolean = true,
+    val isNotificationEnabled: Boolean = false,
     val selectedScheduleBeforeMillis: Millis = Millis.MINUTES_15
 ) : ScreenState

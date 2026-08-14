@@ -8,6 +8,7 @@ import com.solo4.calendarreminder.calendar.presentation.addevent.content.state.A
 import com.solo4.calendarreminder.calendar.presentation.addevent.content.state.AddEventScreenEvent
 import com.solo4.calendarreminder.calendar.presentation.addevent.content.state.AddEventScreenState
 import com.solo4.calendarreminder.calendar.presentation.addevent.content.state.AddEventScreenStateDelegate
+import com.solo4.calendarreminder.calendar.presentation.calendar.content.utils.DATE_PATTERN
 import com.solo4.calendarreminder.calendar.presentation.calendar.content.utils.addTimezoneOffset
 import com.solo4.calendarreminder.calendar.presentation.calendar.content.utils.formatDateIdToDayMillis
 import com.solo4.calendarreminder.calendar.presentation.calendar.content.utils.getFormattedDateId
@@ -41,11 +42,7 @@ class AddEventViewModel(
     ) {
 
     val scheduleBeforeMillis = Millis.entries
-        .filter {
-            if (it == Millis.NONE) return@filter true
-            if (it.toMinutes() == 0L) return@filter false
-            true
-        }
+        .filter { it != Millis.NONE && it.toMinutes() > 0L }
         .sortedBy { it.millis }
 
     private val _datePickerState = MutableStateFlow(
@@ -86,7 +83,11 @@ class AddEventViewModel(
 
     fun onDismissDatePickerClicked() {
         viewModelScope.launch {
-            handleEvent(AddEventScreenEvent.OnDismissDatePickerClicked)
+            if (!screenState.value.isTimeEnabled) {
+                handleEvent(AddEventScreenEvent.OnDateOnlySelected(formattedSelectedDate(isTimeEnabled = false)))
+            } else {
+                handleEvent(AddEventScreenEvent.OnDismissDatePickerClicked)
+            }
         }
     }
 
@@ -94,9 +95,34 @@ class AddEventViewModel(
         viewModelScope.launch {
             handleEvent(
                 AddEventScreenEvent.OnTimePickerDismissed(
-                    selectedDate = (getDateFromPicker() + timePickerState.value.millis).toDateByPattern()
+                    selectedDate = formattedSelectedDate(isTimeEnabled = true)
                 )
             )
+        }
+    }
+
+    fun onTimeEnabledChanged(isEnabled: Boolean) {
+        viewModelScope.launch {
+            handleEvent(
+                AddEventScreenEvent.OnTimeEnabledChanged(
+                    isEnabled = isEnabled,
+                    selectedDate = formattedSelectedDate(isTimeEnabled = isEnabled)
+                )
+            )
+        }
+    }
+
+    fun onNotificationEnabledChanged(isEnabled: Boolean) {
+        viewModelScope.launch {
+            if (isEnabled && !screenState.value.isTimeEnabled) {
+                handleEvent(
+                    AddEventScreenEvent.OnTimeEnabledChanged(
+                        isEnabled = true,
+                        selectedDate = formattedSelectedDate(isTimeEnabled = true)
+                    )
+                )
+            }
+            handleEvent(AddEventScreenEvent.OnNotificationEnabledChanged(isEnabled))
         }
     }
 
@@ -111,13 +137,21 @@ class AddEventViewModel(
             // todo emit loading state
 
             val eventDate = getDateFromPicker()
-            val eventTimeMillis = eventDate + timePickerState.value.millis
-
             val data = screenState.value
 
             if (!errorDelegate.isScreenStateValid(data)) return@launch
 
-            val scheduleBeforeMillis = data.selectedScheduleBeforeMillis.millis
+            val eventTimeMillis = if (data.isTimeEnabled) {
+                eventDate + timePickerState.value.millis
+            } else {
+                0L
+            }
+            val shouldNotify = data.isNotificationEnabled && data.isTimeEnabled
+            val scheduleBeforeMillis = if (shouldNotify) {
+                data.selectedScheduleBeforeMillis.millis
+            } else {
+                Millis.NONE.millis
+            }
             val event = CalendarEvent(
                 dayMillis = getFormattedDateId(
                     day = calendar.dayOfMonthOf(eventDate),
@@ -132,12 +166,23 @@ class AddEventViewModel(
             val eventId = addEventRepository.saveEvent(event)
             val savedEvent = event.copy(eventId = eventId)
 
-            eventsNotificationManager.scheduleEvent(
-                savedEvent,
-                scheduleBeforeMillis
-            )
+            if (shouldNotify) {
+                eventsNotificationManager.scheduleEvent(
+                    savedEvent,
+                    scheduleBeforeMillis
+                )
+            }
 
             _navigationState.emit(Unit)
+        }
+    }
+
+    private fun formattedSelectedDate(isTimeEnabled: Boolean): String {
+        val eventDate = getDateFromPicker()
+        return if (isTimeEnabled) {
+            (eventDate + timePickerState.value.millis).toDateByPattern()
+        } else {
+            eventDate.toDateByPattern(DATE_PATTERN)
         }
     }
 

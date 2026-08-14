@@ -29,6 +29,15 @@ fun Long.toDateByPattern(pattern: String = DATE_IN_TIME_PATTERN): String {
     return getDateFormatter().formatByPattern(this, pattern)
 }
 
+fun Long.dayIdToDisplayDate(): String {
+    val dayIdString = toString()
+    if (dayIdString.length != 8) return dayIdString
+    val year = dayIdString.substring(0, 4)
+    val month = dayIdString.substring(4, 6)
+    val day = dayIdString.substring(6, 8)
+    return "$day.$month.$year"
+}
+
 fun CalendarWrapper.formatDateIdToDayMillis(dayId: Long): Long {
     val dayIdString = dayId.toString()
 

@@ -20,12 +20,15 @@ class AddEventScreenStateDelegate(
 
     override suspend fun handleEvent(event: AddEventScreenEvent) {
         errorDelegate.clearErrors()
-        when(event) {
+        when (event) {
             is AddEventScreenEvent.OnTitleTextChanged -> onTitleChanged(event.text)
             is AddEventScreenEvent.OnDescriptionTextChanged -> onDescriptionChanged(event.text)
             is AddEventScreenEvent.OnDatePickerButtonPressed -> onDatePickerButtonPressed(event.showOnlyTimePicker)
             is AddEventScreenEvent.OnDismissDatePickerClicked -> onDismissDatePickerClicked()
+            is AddEventScreenEvent.OnDateOnlySelected -> onDateOnlySelected(event.selectedDate)
             is AddEventScreenEvent.OnTimePickerDismissed -> onTimePickerDismissed(event.selectedDate)
+            is AddEventScreenEvent.OnTimeEnabledChanged -> onTimeEnabledChanged(event.isEnabled, event.selectedDate)
+            is AddEventScreenEvent.OnNotificationEnabledChanged -> onNotificationEnabledChanged(event.isEnabled)
             is AddEventScreenEvent.OnSchedulingFilterChipClicked -> onSchedulingFilterChipClicked(event.millis)
         }
     }
@@ -47,12 +50,11 @@ class AddEventScreenStateDelegate(
     }
 
     private suspend fun onDatePickerButtonPressed(showOnlyTimePicker: Boolean) {
+        val state = _screenState.value
         _screenState.emit(
-            _screenState.value.copy(
-                // Показываем дэйт пикер если нет предустановленного дня
+            state.copy(
                 isDatePickerVisible = !showOnlyTimePicker,
-                // Показываем тайм пикер, если ден был заранее установлен
-                isTimePickerVisible = showOnlyTimePicker
+                isTimePickerVisible = showOnlyTimePicker && state.isTimeEnabled
             )
         )
     }
@@ -66,12 +68,42 @@ class AddEventScreenStateDelegate(
         )
     }
 
+    private fun onDateOnlySelected(selectedDate: String) {
+        _screenState.tryEmit(
+            _screenState.value.copy(
+                isDatePickerVisible = false,
+                isTimePickerVisible = false,
+                selectedDate = selectedDate
+            )
+        )
+    }
+
     private fun onTimePickerDismissed(selectedDate: String) {
         _screenState.tryEmit(
             _screenState.value.copy(
                 isDatePickerVisible = false,
                 isTimePickerVisible = false,
                 selectedDate = selectedDate
+            )
+        )
+    }
+
+    private fun onTimeEnabledChanged(isEnabled: Boolean, selectedDate: String) {
+        _screenState.tryEmit(
+            _screenState.value.copy(
+                isTimeEnabled = isEnabled,
+                isNotificationEnabled = if (isEnabled) _screenState.value.isNotificationEnabled else false,
+                selectedDate = selectedDate,
+                isTimePickerVisible = false
+            )
+        )
+    }
+
+    private fun onNotificationEnabledChanged(isEnabled: Boolean) {
+        _screenState.tryEmit(
+            _screenState.value.copy(
+                isNotificationEnabled = isEnabled,
+                isTimeEnabled = if (isEnabled) true else _screenState.value.isTimeEnabled
             )
         )
     }

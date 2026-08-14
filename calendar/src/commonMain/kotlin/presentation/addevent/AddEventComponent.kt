@@ -67,6 +67,8 @@ class AddEventComponent(
             onTitleTextFieldChanged = viewModel::onTitleTextFieldChanged,
             onDescriptionTextFieldChanged = viewModel::onDescriptionTextFieldChanged,
             onDatePickerButtonPressed = viewModel::onDatePickerButtonPressed,
+            onTimeEnabledChanged = viewModel::onTimeEnabledChanged,
+            onNotificationEnabledChanged = viewModel::onNotificationEnabledChanged,
             onSubmitButtonClicked = viewModel::onSubmitButtonClicked,
             onBackPressed = navigation::pop
         )
